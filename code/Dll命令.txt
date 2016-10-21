@@ -1,0 +1,6 @@
+.版本 2
+
+.DLL命令 CoUninitialize, 整数型, "Ole32", "CoUninitialize"
+
+.DLL命令 CoInitialize, 整数型, "ole32", "CoInitialize"
+    .参数 pvReserved, 整数型, 传址, 0
