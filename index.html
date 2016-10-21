@@ -3,11 +3,13 @@
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" src="echarts.min.js"></script>
-  <style type='text/css'></style>
+  <style type='text/css'>
+    
+  </style>
 </head>
 <body style="height: 100%; margin: 0">
 <div id="chart1">
- <div id="container1" style="height: 100%;width:100%"></div>
+ <div id="container1" style="height: 300px;width:100%"></div>
   <script type="text/javascript">
   var dom = document.getElementById("container1");
   var myChart = echarts.init(dom);
@@ -15,7 +17,7 @@
   option = {
     title: {
       // 标题组件
-      text: '某楼盘销售情况',// 主标题，支持‘\n’换行
+      text: '某楼盘销售情况1',// 主标题，支持‘\n’换行
       link:'http://www.baidu.com',// 主标题文本链接
       target:'blank',// 主标题链接打开方式，可选：blank/self（新窗口/当前窗口）
       subtext: '纯属虚构',// 副标题
@@ -106,7 +108,7 @@
 </script> 
 </div>
 <div id="chart2">
-<div id="container2" style="height: 100%;width:100%"></div>
+<div id="container2" style="height: 300px;width:100%"></div>
   <script type="text/javascript">
   var dom = document.getElementById("container2");
   var myChart = echarts.init(dom);
@@ -114,7 +116,7 @@
   option = {
     title: {
       // 标题组件
-      text: '某楼盘销售情况',// 主标题，支持‘\n’换行
+      text: '某楼盘销售情况2',// 主标题，支持‘\n’换行
       link:'http://www.baidu.com',// 主标题文本链接
       target:'blank',// 主标题链接打开方式，可选：blank/self（新窗口/当前窗口）
       subtext: '纯属虚构',// 副标题
