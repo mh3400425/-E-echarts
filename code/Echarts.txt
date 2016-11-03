@@ -186,31 +186,54 @@ path [1] ＝ root.Get (路径 [1])
 .变量循环首 (2, 位置, 1, i)
     path [i] ＝ path [i － 1].Get (路径 [i])
 .变量循环尾 ()
-位置 ＝ 取数组成员数 (路径)
-.判断开始 (是否为空 (文本值) ＝ 假)
-    path [位置].Put (路径 [位置], json.CreateStringValue (文本值))
-.判断 (是否为空 (逻辑值) ＝ 假)
-    path [位置].Put (路径 [位置], json.CreateBoolValue (逻辑值))
-.判断 (是否为空 (数值) ＝ 假)
-    path [位置].Put (路径 [位置], json.CreateDoubleValue (数值))
-.判断 (是否为空 (数组内容) ＝ 假)
-    path [位置].Put (路径 [位置], 数组内容)
-.判断 (是否为空 (对象内容) ＝ 假)
-    path [位置].Put (路径 [位置], 对象内容)
-.判断 (是否为空 (空NULL) ＝ 假)
-    path [位置].Put (路径 [位置], json.CreateNullValue ())
-.默认
 
-.判断结束
-.如果 (位置 ＝ 2)
-    root.Put (路径 [1], path [2])
+.如果 (取数组成员数 (路径) ＝ 2)
+    .判断开始 (是否为空 (文本值) ＝ 假)
+        path [1].Put (路径 [2], json.CreateStringValue (文本值))
+    .判断 (是否为空 (逻辑值) ＝ 假)
+        path [1].Put (路径 [2], json.CreateBoolValue (逻辑值))
+    .判断 (是否为空 (数值) ＝ 假)
+        path [1].Put (路径 [2], json.CreateDoubleValue (数值))
+    .判断 (是否为空 (数组内容) ＝ 假)
+        path [1].Put (路径 [2], 数组内容)
+    .判断 (是否为空 (对象内容) ＝ 假)
+        path [1].Put (路径 [2], 对象内容)
+    .判断 (是否为空 (空NULL) ＝ 假)
+        path [1].Put (路径 [2], json.CreateNullValue ())
+    .默认
+
+    .判断结束
+
+    root.Put (路径 [1], path [1])
+
 .否则
+    位置 ＝ 取数组成员数 (路径)
+    .判断开始 (是否为空 (文本值) ＝ 假)
+        path [位置].Put (路径 [位置], json.CreateStringValue (文本值))
+    .判断 (是否为空 (逻辑值) ＝ 假)
+        path [位置].Put (路径 [位置], json.CreateBoolValue (逻辑值))
+    .判断 (是否为空 (数值) ＝ 假)
+        path [位置].Put (路径 [位置], json.CreateDoubleValue (数值))
+    .判断 (是否为空 (数组内容) ＝ 假)
+        path [位置].Put (路径 [位置], 数组内容)
+    .判断 (是否为空 (对象内容) ＝ 假)
+        path [位置].Put (路径 [位置], 对象内容)
+    .判断 (是否为空 (空NULL) ＝ 假)
+        path [位置].Put (路径 [位置], json.CreateNullValue ())
+    .默认
+
+    .判断结束
     path [位置 － 2].Put (路径 [位置 － 1], path [位置])
     .变量循环首 (位置 － 3, 1, -1, i)
         path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
     .变量循环尾 ()
     root.Put (路径 [1], path [1])
+
 .如果结束
+
+
+' 信息框 (json.ToJsonString (path [1], , , ) ＋ #换行符 ＋ #换行符 ＋ json.ToJsonString (path [2], , , ), 0, , )
+
 返回 (json.ToJsonString (root))
 
 .子程序 创建数组内容, STJsonValue, 公开
