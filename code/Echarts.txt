@@ -23,6 +23,7 @@
 .参数 高度, 文本型, 可空, 例：300px/100%，默认：500px
 .参数 折线图名称, 文本型, 可空, 默认：container1
 .参数 配置信息, 文本型, , 请使用创建标准配置()自动创建。
+.参数 是否要显示loading等待, 逻辑型, 可空, 默认：假。数据比较多加载慢时可设置显示loading，数据使用js后期加载。
 .局部变量 临时文本, 文本型
 
 .如果真 (是否为空 (宽度) 或 删首尾空 (宽度) ＝ “”)
@@ -39,14 +40,19 @@
 临时文本 ＝ 子文本替换 (临时文本, “%宽度%”, 宽度, , , 真)
 临时文本 ＝ 子文本替换 (临时文本, “%折线图名称%”, 折线图名称, , , 真)
 临时文本 ＝ 子文本替换 (临时文本, “%配置信息%”, 配置信息, , , 真)
+.如果 (是否要显示loading等待)
+    临时文本 ＝ 子文本替换 (临时文本, “%是否要显示loading%”, “myChart.showLoading();”, , , 真)
+.否则
+    临时文本 ＝ 子文本替换 (临时文本, “%是否要显示loading%”, “”, , , 真)
+.如果结束
 返回 (临时文本)
 
 
 .子程序 折线图_创建标准配置, 文本型, 公开, 使用标准配置创建图形，返回值的配置内容可使用“增改配置（）”详细修改。
 .参数 图表主标题, 文本型, 可空, 留空则不显示。
 .参数 图表副标题, 文本型, 可空, 留空则不显示。
-.参数 X轴数据组, 文本型, 数组, 此为X轴的标尺，此数组内容应与Y轴数据对应
-.参数 Y轴数据组, Y轴数据类型, 数组
+.参数 X轴数据组, 文本型, 可空 数组, 此为X轴的标尺，此数组内容应与Y轴数据对应
+.参数 Y轴数据组, Y轴数据类型, 可空 数组, 为空时可快速显示空坐标轴（提升使用体验），然后可以使用js后期异步加载数据。
 .局部变量 json, STJson
 .局部变量 root, STJsonValue
 .局部变量 标题, STJsonValue
@@ -118,14 +124,14 @@ root.Put (“tooltip”, 鼠标提示)
 返回 (json.ToJsonString (root))
 
 
-.子程序 增改配置, 文本型, 公开, 增改json中的键值，用来修改配置内容，请在创建折线图之前修改。
-.参数 原内容, 文本型, , json
+.子程序 增改json, 文本型, 公开, 增加或修改json中的内容。
+.参数 原json, 文本型, , json
 .参数 操作路径, 文本型, , 类似“a.b.c"，英文句点隔开
 .参数 文本值, 文本型, 可空, 多选一；...
 .参数 逻辑值, 逻辑型, 可空, 多选一；真/假
 .参数 数值, 双精度小数型, 可空, 多选一；数字
-.参数 数组内容, STJsonValue, 可空, 多选一；中括号“[ ]”
-.参数 对象内容, STJsonValue, 可空, 多选一；大括号“{ }”
+.参数 数组内容, 文本型, 可空, 多选一；中括号“[ ]”，可用 创建json数组（） 生成。
+.参数 对象内容, 文本型, 可空, 多选一；大括号“{ }”，可用 增改json（） 生成
 .参数 空NULL, 整数型, 可空, 多选一；1 = null
 .局部变量 json, STJson
 .局部变量 root, STJsonValue
@@ -135,12 +141,31 @@ root.Put (“tooltip”, 鼠标提示)
 .局部变量 i, 整数型
 .局部变量 位置, 整数型
 .局部变量 是否存在, 逻辑型
+.局部变量 数组json, STJsonValue
+.局部变量 对象json, STJsonValue
 
 ' 调试输出 (“path = ”, 操作路径, 文本值)
-root ＝ json.Parse (原内容, resule)
+.判断开始 (是否为空 (数组内容) ＝ 假)
+    数组json ＝ json.Parse (数组内容, resule)
+    .如果真 (resule.stat ＝ 假)
+        信息框 (“函数：增改json（）” ＋ #换行符 ＋ “参数：数组内容，参数内容无效。”, 0, , )
+        返回 (“”)
+    .如果真结束
+
+.判断 (是否为空 (对象内容) ＝ 假)
+    对象json ＝ json.Parse (对象内容, resule)
+    .如果真 (resule.stat ＝ 假)
+        信息框 (“函数：增改json（）” ＋ #换行符 ＋ “参数：对象内容，参数内容无效。”, 0, , )
+        返回 (“”)
+    .如果真结束
+
+.默认
+
+.判断结束
+root ＝ json.Parse (原json, resule)
 路径 ＝ 分割文本 (操作路径, “.”, )
 .如果真 (取数组成员数 (路径) ＝ 0)
-    返回 (原内容)
+    返回 (原json)
 .如果真结束
 重定义数组 (path, 假, 取数组成员数 (路径))
 是否存在 ＝ 真
@@ -165,9 +190,9 @@ path [1] ＝ root.Get (路径 [1])
             path [i － 2].Put (路径 [i － 1], json.CreateDoubleValue (数值))
             path [1].SetDouble (数值)
         .判断 (是否为空 (数组内容) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], 数组内容)
+            path [i － 2].Put (路径 [i － 1], 数组json)
         .判断 (是否为空 (对象内容) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], 对象内容)
+            path [i － 2].Put (路径 [i － 1], 对象json)
         .判断 (是否为空 (空NULL) ＝ 假)
             path [i － 2].Put (路径 [i － 1], json.CreateNullValue ())
         .默认
@@ -195,9 +220,9 @@ path [1] ＝ root.Get (路径 [1])
     .判断 (是否为空 (数值) ＝ 假)
         path [1].Put (路径 [2], json.CreateDoubleValue (数值))
     .判断 (是否为空 (数组内容) ＝ 假)
-        path [1].Put (路径 [2], 数组内容)
+        path [1].Put (路径 [2], 数组json)
     .判断 (是否为空 (对象内容) ＝ 假)
-        path [1].Put (路径 [2], 对象内容)
+        path [1].Put (路径 [2], 对象json)
     .判断 (是否为空 (空NULL) ＝ 假)
         path [1].Put (路径 [2], json.CreateNullValue ())
     .默认
@@ -208,26 +233,48 @@ path [1] ＝ root.Get (路径 [1])
 
 .否则
     位置 ＝ 取数组成员数 (路径)
-    .判断开始 (是否为空 (文本值) ＝ 假)
-        path [位置].Put (路径 [位置], json.CreateStringValue (文本值))
-    .判断 (是否为空 (逻辑值) ＝ 假)
-        path [位置].Put (路径 [位置], json.CreateBoolValue (逻辑值))
-    .判断 (是否为空 (数值) ＝ 假)
-        path [位置].Put (路径 [位置], json.CreateDoubleValue (数值))
-    .判断 (是否为空 (数组内容) ＝ 假)
-        path [位置].Put (路径 [位置], 数组内容)
-    .判断 (是否为空 (对象内容) ＝ 假)
-        path [位置].Put (路径 [位置], 对象内容)
-    .判断 (是否为空 (空NULL) ＝ 假)
-        path [位置].Put (路径 [位置], json.CreateNullValue ())
-    .默认
+    .如果 (位置 ＝ 1)
+        .判断开始 (是否为空 (文本值) ＝ 假)
+            root.Put (路径 [1], json.CreateStringValue (文本值))
+        .判断 (是否为空 (逻辑值) ＝ 假)
+            root.Put (路径 [1], json.CreateBoolValue (逻辑值))
+        .判断 (是否为空 (数值) ＝ 假)
+            root.Put (路径 [1], json.CreateDoubleValue (数值))
+        .判断 (是否为空 (数组内容) ＝ 假)
+            root.Put (路径 [1], 数组json)
+        .判断 (是否为空 (对象内容) ＝ 假)
+            root.Put (路径 [1], 对象json)
+        .判断 (是否为空 (空NULL) ＝ 假)
+            root.Put (路径 [1], json.CreateNullValue ())
+        .默认
 
-    .判断结束
-    path [位置 － 2].Put (路径 [位置 － 1], path [位置])
-    .变量循环首 (位置 － 3, 1, -1, i)
-        path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
-    .变量循环尾 ()
-    root.Put (路径 [1], path [1])
+        .判断结束
+
+    .否则
+        .判断开始 (是否为空 (文本值) ＝ 假)
+            path [位置].Put (路径 [位置], json.CreateStringValue (文本值))
+        .判断 (是否为空 (逻辑值) ＝ 假)
+            path [位置].Put (路径 [位置], json.CreateBoolValue (逻辑值))
+        .判断 (是否为空 (数值) ＝ 假)
+            path [位置].Put (路径 [位置], json.CreateDoubleValue (数值))
+        .判断 (是否为空 (数组内容) ＝ 假)
+            path [位置].Put (路径 [位置], 数组json)
+        .判断 (是否为空 (对象内容) ＝ 假)
+            path [位置].Put (路径 [位置], 对象json)
+        .判断 (是否为空 (空NULL) ＝ 假)
+            path [位置].Put (路径 [位置], json.CreateNullValue ())
+        .默认
+
+        .判断结束
+
+        path [位置 － 2].Put (路径 [位置 － 1], path [位置])
+        .变量循环首 (位置 － 3, 1, -1, i)
+            path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
+        .变量循环尾 ()
+        root.Put (路径 [1], path [1])
+
+    .如果结束
+
 
 .如果结束
 
@@ -236,17 +283,25 @@ path [1] ＝ root.Get (路径 [1])
 
 返回 (json.ToJsonString (root))
 
-.子程序 创建数组内容, STJsonValue, 公开
+.子程序 创建json数组, 文本型, 公开
 .参数 文本数组, 文本型, 可空 数组
 .参数 小数数组, 双精度小数型, 可空 数组
 .参数 整数数组, 整数型, 可空 数组
 .局部变量 json, STJson
 .局部变量 temp, STJsonValue
+.局部变量 temp1, STJsonValue
+.局部变量 jsonr, STJsonParseResult
 .局部变量 i, 整数型
 
 .判断开始 (是否为空 (文本数组) ＝ 假)
     .计次循环首 (取数组成员数 (文本数组), i)
-        temp.Add (json.CreateStringValue (文本数组 [i]))
+        temp1 ＝ json.Parse (文本数组 [i], jsonr)
+        .如果 (jsonr.stat ＝ 真)
+            temp.Add (temp1)
+        .否则
+            temp.Add (json.CreateStringValue (文本数组 [i]))
+        .如果结束
+
     .计次循环尾 ()
 .判断 (是否为空 (小数数组) ＝ 假)
     .计次循环首 (取数组成员数 (小数数组), i)
@@ -259,8 +314,5 @@ path [1] ＝ root.Get (路径 [1])
 .默认
 
 .判断结束
-返回 (temp)
-
-.子程序 创建对象内容, STJsonValue
-
+返回 (json.ToJsonString (temp, , , ))
 

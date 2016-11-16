@@ -2,7 +2,7 @@
 
 .程序集 工具
 
-.子程序 编码_Unicode到Utf8, 字节集, 公开
+.子程序 编码转换_Unicode到Utf8, 字节集, 公开
 .参数 Unicode字节集, 字节集
 .局部变量 utf8_len, 整数型
 .局部变量 unicode_len, , , , word
@@ -14,14 +14,14 @@ uft8 ＝ 取空白字节集 (utf8_len)
 WideCharToMultiByte (65001, 0, Unicode字节集, -1, uft8, utf8_len, 0, 假)
 返回 (uft8)
 
-.子程序 编码_Ansi到Utf8, 字节集, 公开
+.子程序 编码转换_Ansi到Utf8, 字节集, 公开
 .参数 ansi文本, 文本型
 .局部变量 局_临时, 字节集
 
-局_临时 ＝ 编码_Ansi到Unicode (ansi文本)
-返回 (编码_Unicode到Utf8 (局_临时))
+局_临时 ＝ 编码转换_Ansi到Unicode (ansi文本)
+返回 (编码转换_Unicode到Utf8 (局_临时))
 
-.子程序 编码_Ansi到Unicode, 字节集, 公开, 将Ansi码转换为Unicode码；成功返回转换后的字节集；
+.子程序 编码转换_Ansi到Unicode, 字节集, 公开, 将Ansi码转换为Unicode码；成功返回转换后的字节集；
 .参数 Ansi, 文本型, , 欲转换的Ansi文本
 .参数 非标准Unicode编码, 逻辑型, 可空, 默认为假，为标准Unicode编码
 .局部变量 数据2, 字节集
