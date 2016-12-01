@@ -37,3 +37,36 @@ MultiByteToWideChar (936, 0, Ansi, -1, 数据2, 长度 × 2)
     数据2 ＝ 取字节集左边 (数据2, 取字节集长度 (数据2) － 2)
 .如果真结束
 返回 (数据2)
+
+.子程序 编码转换_Utf8到Ansi, 文本型, 公开
+.参数 utf8字节集, 字节集
+.局部变量 ll
+.局部变量 Length
+.局部变量 Unicode, 字节集
+.局部变量 unicode_len
+.局部变量 ansi_len, 整数型
+.局部变量 ansi, 字节集
+
+.如果真 (utf8字节集 ＝ {  })
+    返回 (“”)
+.如果真结束
+ll ＝ 取字节集长度 (utf8字节集)
+Length ＝ MultiByteToWideChar_字节集 (65001, 0, utf8字节集, ll, {  }, 0)
+Unicode ＝ 取空白字节集 (Length × 2)
+MultiByteToWideChar_字节集 (65001, 0, utf8字节集, ll, Unicode, Length × 2)
+
+unicode_len ＝ 取字节集长度 (Unicode) ÷ 2
+ansi_len ＝ WideCharToMultiByte (936, 0, Unicode, unicode_len, ansi, 0, 0, 假)
+ansi ＝ 取空白字节集 (ansi_len)
+WideCharToMultiByte (936, 0, Unicode, unicode_len, ansi, ansi_len, 0, 假)
+返回 (取字节集数据 (ansi, #文本型, ))
+
+.子程序 编码转换_Utf8到Unicode, 字节集, 公开
+.参数 utf8字节集, 字节集
+.局部变量 length, 整数型, , , 单位: Word
+.局部变量 Unicode字节集, 字节集
+
+length ＝ _Utf8转Unicode (65001, 0, utf8字节集, -1, {  }, 0)
+Unicode字节集 ＝ 取空白字节集 (length × 2)
+_Utf8转Unicode (65001, 0, utf8字节集, -1, Unicode字节集, length × 2)
+返回 (Unicode字节集)
