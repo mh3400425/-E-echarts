@@ -183,7 +183,7 @@ root.Put (“tooltip”, 鼠标提示)
 .局部变量 数组json, STJsonValue
 .局部变量 对象json, STJsonValue
 
-' 调试输出 (“path = ”, 操作路径, 文本值)
+' 调试输出 (“path = ”, 操作路径, 文本值, 逻辑值)
 .判断开始 (是否为空 (数组内容) ＝ 假)
     数组json ＝ json.Parse (数组内容, resule)
     .如果真 (resule.stat ＝ 假)
@@ -221,26 +221,54 @@ path [1] ＝ root.Get (路径 [1])
 
     .变量循环尾 ()
     .如果真 (是否存在)
-        .判断开始 (是否为空 (文本值) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], json.CreateStringValue (文本值))
-        .判断 (是否为空 (逻辑值) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], json.CreateBoolValue (逻辑值))
-        .判断 (是否为空 (数值) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], json.CreateDoubleValue (数值))
-            path [1].SetDouble (数值)
-        .判断 (是否为空 (数组内容) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], 数组json)
-        .判断 (是否为空 (对象内容) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], 对象json)
-        .判断 (是否为空 (空NULL) ＝ 假)
-            path [i － 2].Put (路径 [i － 1], json.CreateNullValue ())
-        .默认
+        ' 调试输出 (取数组成员数 (path), i, json.ToJsonString (path [1], , , ))
 
-        .判断结束
-        .变量循环首 (i － 3, 1, -1, i)
-            path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
-        .变量循环尾 ()
-        root.Put (路径 [1], path [1])
+        .如果 (i ＝ 2)
+            .判断开始 (是否为空 (文本值) ＝ 假)
+                ' path [i － 2].Put (路径 [i － 1], json.CreateStringValue (文本值))
+                root.Put (路径 [1], json.CreateStringValue (文本值))
+            .判断 (是否为空 (逻辑值) ＝ 假)
+                ' path [1].Put (路径 [1], json.CreateBoolValue (逻辑值))
+                root.Put (路径 [1], json.CreateBoolValue (逻辑值))
+            .判断 (是否为空 (数值) ＝ 假)
+                ' path [i － 2].Put (路径 [i － 1], json.CreateDoubleValue (数值))
+                root.Put (路径 [1], json.CreateDoubleValue (数值))
+            .判断 (是否为空 (数组内容) ＝ 假)
+                ' path [i － 2].Put (路径 [i － 1], 数组json)
+                root.Put (路径 [1], 数组json)
+            .判断 (是否为空 (对象内容) ＝ 假)
+                ' path [i － 2].Put (路径 [i － 1], 对象json)
+                root.Put (路径 [1], 对象json)
+            .判断 (是否为空 (空NULL) ＝ 假)
+                ' path [i － 2].Put (路径 [i － 1], json.CreateNullValue ())
+                root.Put (路径 [1], json.CreateNullValue ())
+            .默认
+
+            .判断结束
+
+        .否则
+            .判断开始 (是否为空 (文本值) ＝ 假)
+                path [i － 2].Put (路径 [i － 1], json.CreateStringValue (文本值))
+            .判断 (是否为空 (逻辑值) ＝ 假)
+                path [i － 2].Put (路径 [i － 1], json.CreateBoolValue (逻辑值))
+            .判断 (是否为空 (数值) ＝ 假)
+                path [i － 2].Put (路径 [i － 1], json.CreateDoubleValue (数值))
+                path [1].SetDouble (数值)
+            .判断 (是否为空 (数组内容) ＝ 假)
+                path [i － 2].Put (路径 [i － 1], 数组json)
+            .判断 (是否为空 (对象内容) ＝ 假)
+                path [i － 2].Put (路径 [i － 1], 对象json)
+            .判断 (是否为空 (空NULL) ＝ 假)
+                path [i － 2].Put (路径 [i － 1], json.CreateNullValue ())
+            .默认
+
+            .判断结束
+            .变量循环首 (i － 3, 1, -1, i)
+                path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
+            .变量循环尾 ()
+            root.Put (路径 [1], path [1])
+        .如果结束
+
         返回 (json.ToJsonString (root))
     .如果真结束
 

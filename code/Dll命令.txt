@@ -1,0 +1,35 @@
+.版本 2
+
+.DLL命令 MultiByteToWideChar, 整数型, , "MultiByteToWideChar", 公开
+    .参数 CodePage, 整数型
+    .参数 dwFlags, 整数型
+    .参数 lpMultiByteStr, 文本型
+    .参数 cchMultiByte, 整数型
+    .参数 lpWideCharStr, 字节集
+    .参数 cchWideChar, 整数型
+
+.DLL命令 MultiByteToWideChar_字节集, 整数型, , "MultiByteToWideChar"
+    .参数 CodePage, 整数型
+    .参数 dwFlags, 整数型
+    .参数 lpMultiByteStr, 字节集
+    .参数 cchMultiByte, 整数型
+    .参数 lpWideCharStr, 字节集
+    .参数 cchWideChar, 整数型
+
+.DLL命令 _Utf8转Unicode, 整数型, "kernel32.dll", "MultiByteToWideChar", , _Utf8转Unicode
+    .参数 CodePage, 整数型
+    .参数 dwFlags, 整数型
+    .参数 lpMultiByteStr, 字节集
+    .参数 cchMultiByte, 整数型
+    .参数 lpWideCharStr, 字节集
+    .参数 cchWideChar, 整数型
+
+.DLL命令 WideCharToMultiByte, 整数型, "kernel32.dll", "WideCharToMultiByte", 公开, kernel32.dll 将通配符映像为多字节 _Unicode转Utf8
+    .参数 CodePage, 整数型, , 1
+    .参数 dwFlags, 整数型
+    .参数 lpWideCharStr, 字节集
+    .参数 cchWideChar, 整数型
+    .参数 lpMultiByteStr, 字节集
+    .参数 cchMultiByte, 整数型
+    .参数 lpDefaultChar, 整数型
+    .参数 lpUsedDefaultChar, 逻辑型
