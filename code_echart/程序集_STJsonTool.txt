@@ -1,0 +1,169 @@
+.版本 2
+
+.程序集 STJsonTool
+
+.子程序 JsonToByteArray, 字节集
+.参数 obj, STJsonValue, 参考
+.局部变量 len, 整数型
+.局部变量 array, 字节集, , "0"
+.局部变量 keys, 文本型, , "0"
+.局部变量 i, 整数型
+.局部变量 root, 逻辑型
+.局部变量 data, 字节集
+.局部变量 handle, 整数型
+
+handle ＝ 打开内存文件 ()
+WriteString (handle, obj.Type ())
+.判断开始 (文本比较 (obj.Type (), #JTYPE_LONG, 假) ＝ 0)
+    WriteLong (handle, obj.AsLong ())
+.判断 (文本比较 (obj.Type (), #JTYPE_DOUBLE, 假) ＝ 0)
+    WriteDouble (handle, obj.AsDouble ())
+.判断 (文本比较 (obj.Type (), #JTYPE_STRING, 假) ＝ 0)
+    WriteString (handle, obj.AsString ())
+.判断 (文本比较 (obj.Type (), #JTYPE_ARRAY, 假) ＝ 0)
+    len ＝ obj.__OUT_DATA_ARRAY (array)
+    WriteInt (handle, len)
+    .计次循环首 (len, i)
+        WriteByteArray (handle, array [i])
+    .计次循环尾 ()
+.判断 (文本比较 (obj.Type (), #JTYPE_OBJECT, 假) ＝ 0)
+    len ＝ obj.Keys (keys)
+    WriteInt (handle, len)
+    .计次循环首 (len, i)
+        WriteString (handle, keys [i])
+        WriteByteArray (handle, obj.__OUT_DATA_OBJ (keys [i]))
+    .计次循环尾 ()
+.判断 (文本比较 (obj.Type (), #JTYPE_BOOL, 假) ＝ 0)
+    WriteString (handle, 选择 (obj.AsBool (), “true”, “false”))
+.判断 (文本比较 (obj.Type (), #JTYPE_NULL, 假) ＝ 0)
+
+.默认
+
+.判断结束
+移到文件首 (handle)
+data ＝ 读入字节集 (handle, 取文件长度 (handle))
+关闭文件 (handle)
+返回 (data)
+
+
+.子程序 ByteArrayToJson, STJsonValue
+.参数 data, 字节集, 参考
+.局部变量 handle, 整数型
+.局部变量 i, 整数型
+.局部变量 obj, STJsonValue
+.局部变量 len, 整数型
+.局部变量 key, 文本型
+.局部变量 type, 文本型
+.局部变量 valData, 字节集
+
+.如果真 (取字节集长度 (data) ＝ 0)
+    返回 (obj)
+.如果真结束
+
+handle ＝ 打开内存文件 ()
+写出字节集 (handle, data)
+移到文件首 (handle)
+type ＝ ReadString (handle)
+obj.Type (type)
+.判断开始 (文本比较 (obj.Type (), #JTYPE_LONG, 假) ＝ 0)
+    obj.SetLong (ReadLong (handle))
+.判断 (文本比较 (obj.Type (), #JTYPE_DOUBLE, 假) ＝ 0)
+    obj.SetDouble (ReadDouble (handle))
+.判断 (文本比较 (obj.Type (), #JTYPE_STRING, 假) ＝ 0)
+    obj.SetString (ReadString (handle))
+.判断 (文本比较 (obj.Type (), #JTYPE_ARRAY, 假) ＝ 0)
+    len ＝ ReadInt (handle)
+    .计次循环首 (len, i)
+        obj.__IN_DATA_ARRAY (ReadByteArray (handle))
+    .计次循环尾 ()
+.判断 (文本比较 (obj.Type (), #JTYPE_OBJECT, 假) ＝ 0)
+    len ＝ ReadInt (handle)
+    .计次循环首 (len, i)
+        key ＝ ReadString (handle)
+        obj.__IN_DATA_OBJ (key, ReadByteArray (handle))
+    .计次循环尾 ()
+.判断 (文本比较 (obj.Type (), #JTYPE_BOOL, 假) ＝ 0)
+    obj.SetBool (文本比较 (ReadString (handle), “true”, 假) ＝ 0)
+.判断 (文本比较 (obj.Type (), #JTYPE_NULL, 假) ＝ 0)
+
+.默认
+
+.判断结束
+关闭文件 (handle)
+返回 (obj)
+
+
+.子程序 WriteString
+.参数 handle, 整数型, 参考
+.参数 value, 文本型, 参考
+
+WriteByteArray (handle, 到字节集 (value))
+
+
+.子程序 WriteByteArray
+.参数 handle, 整数型, 参考
+.参数 value, 字节集, 参考
+
+WriteInt (handle, 取字节集长度 (value))
+写出字节集 (handle, value)
+
+
+.子程序 ReadString, 文本型
+.参数 handle, 整数型, 参考
+
+返回 (到文本 (ReadByteArray (handle)))
+
+
+.子程序 ReadByteArray, 字节集
+.参数 handle, 整数型, 参考
+.局部变量 len, 整数型
+.局部变量 data
+
+len ＝ ReadInt (handle)
+返回 (读入字节集 (handle, len))
+
+
+.子程序 WriteInt
+.参数 handle, 整数型, 参考
+.参数 value, 整数型
+
+写出字节集 (handle, 到字节集 (value))
+
+
+.子程序 ReadInt, 整数型
+.参数 handle, 整数型, 参考
+.局部变量 data, 字节集
+
+data ＝ 读入字节集 (handle, 取数据类型尺寸 (#整数型))
+返回 (取字节集数据 (data, #整数型, ))
+
+
+.子程序 WriteLong
+.参数 handle, 整数型, 参考
+.参数 value, 长整数型
+
+写出字节集 (handle, 到字节集 (value))
+
+
+.子程序 ReadLong, 整数型
+.参数 handle, 整数型, 参考
+.局部变量 data, 字节集
+
+data ＝ 读入字节集 (handle, 取数据类型尺寸 (#长整数型))
+返回 (取字节集数据 (data, #长整数型, ))
+
+
+.子程序 WriteDouble
+.参数 handle, 整数型, 参考
+.参数 value, 双精度小数型
+
+写出字节集 (handle, 到字节集 (value))
+
+
+.子程序 ReadDouble, 双精度小数型
+.参数 handle, 整数型, 参考
+.局部变量 data, 字节集
+
+data ＝ 读入字节集 (handle, 取数据类型尺寸 (#双精度小数型))
+返回 (取字节集数据 (data, #双精度小数型, ))
+

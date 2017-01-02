@@ -7,12 +7,21 @@
 .参数 页面主体代码, 文本型, , 可以使用“折线图_创建（）”等生成图形代码。
 .参数 引用JS文件, 文本型, 可空, 引用外部JS文件，多个文件用“|”分隔开。（请注意文件路径）
 .参数 引用CSS文件, 文本型, 可空, 引用外部CSS文件，多个文件用“|”分隔开。（请注意文件路径）
+.参数 编码, 整数型, 可空, 默认为1（utf8），编码：1=utf8，2=GBK。假如使用IE内核浏览框（浏览器）则建议使用GBK编码，如使用其他内核浏览框（如chrome内核，例如wke、CEF等）则建议使用utf8编码（写出文件时也需要转换文件编码为UTF8）
 .局部变量 临时文本, 文本型
 .局部变量 临时文本数组, 文本型, , "0"
 .局部变量 i, 整数型
 
 临时文本 ＝ #HTML_页面初始框架
 临时文本 ＝ 子文本替换 (临时文本, “%CSS代码%”, CSS代码, , , 真)
+.判断开始 (编码 ＝ 1)
+    临时文本 ＝ 子文本替换 (临时文本, “%编码%”, “utf-8”, , , 真)
+.判断 (编码 ＝ 2)
+    临时文本 ＝ 子文本替换 (临时文本, “%编码%”, “gbk”, , , 真)
+.默认
+    临时文本 ＝ 子文本替换 (临时文本, “%编码%”, “utf-8”, , , 真)
+.判断结束
+
 临时文本 ＝ 子文本替换 (临时文本, “%主体代码%”, 页面主体代码, , , 真)
 临时文本 ＝ 子文本替换 (临时文本, “%Echart代码%”, 编码转换_Utf8到Ansi (#echarts_min), , , 真)
 .如果真 (是否为空 (引用JS文件) ＝ 假)
@@ -209,9 +218,9 @@ root ＝ json.Parse (原json, resule)
 重定义数组 (path, 假, 取数组成员数 (路径))
 是否存在 ＝ 真
 path [1] ＝ root.Get (路径 [1])
-.如果真 (path [1].IsNull () ＝ 假)
+.如果真 (path [1].IsNull () ＝ 假)  ' 判断第一级是否存在，=假为已存在
     位置 ＝ 1
-    .变量循环首 (2, 取数组成员数 (路径), 1, i)
+    .变量循环首 (2, 取数组成员数 (路径), 1, i)  ' 从第二级开始，将已经存在的数据分级保存到数组中，如果有某一级不存在，则跳出（i为路径的级别，例如：hello.world，world为第2级）
         path [i] ＝ path [i － 1].Get (路径 [i])
         .如果真 (path [i].IsNull ())
             位置 ＝ i － 1
@@ -220,27 +229,21 @@ path [1] ＝ root.Get (路径 [1])
         .如果真结束
 
     .变量循环尾 ()
-    .如果真 (是否存在)
+    .如果真 (是否存在)  ' 所有路径都存在，此处修改现有数据
         ' 调试输出 (取数组成员数 (path), i, json.ToJsonString (path [1], , , ))
 
         .如果 (i ＝ 2)
             .判断开始 (是否为空 (文本值) ＝ 假)
-                ' path [i － 2].Put (路径 [i － 1], json.CreateStringValue (文本值))
                 root.Put (路径 [1], json.CreateStringValue (文本值))
             .判断 (是否为空 (逻辑值) ＝ 假)
-                ' path [1].Put (路径 [1], json.CreateBoolValue (逻辑值))
                 root.Put (路径 [1], json.CreateBoolValue (逻辑值))
             .判断 (是否为空 (数值) ＝ 假)
-                ' path [i － 2].Put (路径 [i － 1], json.CreateDoubleValue (数值))
                 root.Put (路径 [1], json.CreateDoubleValue (数值))
             .判断 (是否为空 (数组内容) ＝ 假)
-                ' path [i － 2].Put (路径 [i － 1], 数组json)
                 root.Put (路径 [1], 数组json)
             .判断 (是否为空 (对象内容) ＝ 假)
-                ' path [i － 2].Put (路径 [i － 1], 对象json)
                 root.Put (路径 [1], 对象json)
             .判断 (是否为空 (空NULL) ＝ 假)
-                ' path [i － 2].Put (路径 [i － 1], json.CreateNullValue ())
                 root.Put (路径 [1], json.CreateNullValue ())
             .默认
 
@@ -263,7 +266,8 @@ path [1] ＝ root.Get (路径 [1])
             .默认
 
             .判断结束
-            .变量循环首 (i － 3, 1, -1, i)
+
+            .变量循环首 (i － 3, 1, -1, i)  ' 循环将修改好的数据一级一级还原回去
                 path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
             .变量循环尾 ()
             root.Put (路径 [1], path [1])
@@ -273,12 +277,13 @@ path [1] ＝ root.Get (路径 [1])
     .如果真结束
 
 .如果真结束
-重定义数组 (path, 假, 取数组成员数 (路径))
-path [1] ＝ root.Get (路径 [1])
-.变量循环首 (2, 位置, 1, i)
-    path [i] ＝ path [i － 1].Get (路径 [i])
-.变量循环尾 ()
 
+' 测试用
+.' 计次循环首 (取数组成员数 (path), i)
+    ' 输出调试文本 (“当前：” ＋ 到文本 (i) ＋ “，总数：” ＋ 到文本 (取数组成员数 (path)) ＋ #换行符 ＋ #换行符 ＋ json.ToJsonString (path [i], , , ))
+.' 计次循环尾 ()
+
+' 路径中第一级或者其中某一级不存在，在此处开始创建
 .如果 (取数组成员数 (路径) ＝ 2)
     .判断开始 (是否为空 (文本值) ＝ 假)
         path [1].Put (路径 [2], json.CreateStringValue (文本值))
@@ -319,22 +324,27 @@ path [1] ＝ root.Get (路径 [1])
 
     .否则
         .判断开始 (是否为空 (文本值) ＝ 假)
-            path [位置].Put (路径 [位置], json.CreateStringValue (文本值))
+            path [位置 － 1].Put (路径 [位置], json.CreateStringValue (文本值))
         .判断 (是否为空 (逻辑值) ＝ 假)
-            path [位置].Put (路径 [位置], json.CreateBoolValue (逻辑值))
+            path [位置 － 1].Put (路径 [位置], json.CreateBoolValue (逻辑值))
         .判断 (是否为空 (数值) ＝ 假)
-            path [位置].Put (路径 [位置], json.CreateDoubleValue (数值))
+            path [位置 － 1].Put (路径 [位置], json.CreateDoubleValue (数值))
         .判断 (是否为空 (数组内容) ＝ 假)
-            path [位置].Put (路径 [位置], 数组json)
+            path [位置 － 1].Put (路径 [位置], 数组json)
         .判断 (是否为空 (对象内容) ＝ 假)
-            path [位置].Put (路径 [位置], 对象json)
+            path [位置 － 1].Put (路径 [位置], 对象json)
         .判断 (是否为空 (空NULL) ＝ 假)
-            path [位置].Put (路径 [位置], json.CreateNullValue ())
+            path [位置 － 1].Put (路径 [位置], json.CreateNullValue ())
         .默认
 
         .判断结束
 
-        path [位置 － 2].Put (路径 [位置 － 1], path [位置])
+        ' 测试用
+        .' 计次循环首 (取数组成员数 (path), i)
+            ' 输出调试文本 (“当前：” ＋ 到文本 (i) ＋ “，总数：” ＋ 到文本 (取数组成员数 (path)) ＋ #换行符 ＋ #换行符 ＋ json.ToJsonString (path [i], , , ))
+        .' 计次循环尾 ()
+
+        path [位置 － 2].Put (路径 [位置 － 1], path [位置 － 1])
         .变量循环首 (位置 － 3, 1, -1, i)
             path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
         .变量循环尾 ()
@@ -342,11 +352,7 @@ path [1] ＝ root.Get (路径 [1])
 
     .如果结束
 
-
 .如果结束
-
-
-' 信息框 (json.ToJsonString (path [1], , , ) ＋ #换行符 ＋ #换行符 ＋ json.ToJsonString (path [2], , , ), 0, , )
 
 返回 (json.ToJsonString (root))
 
