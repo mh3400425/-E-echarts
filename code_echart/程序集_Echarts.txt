@@ -56,12 +56,12 @@
 .如果真结束
 返回 (临时文本)
 
-.子程序 折线图_创建, 文本型, 公开
+.子程序 创建图形, 文本型, 公开, 根据参数‘配置信息’创建指定的图形。
 .参数 宽度, 文本型, 可空, 例：300px/100%，默认：100%
 .参数 高度, 文本型, 可空, 例：300px/100%，默认：500px
 .参数 折线图div块名称, 文本型, 可空, 默认：container1 ，方便使用css布局。
 .参数 折线图对象名称, 文本型, 可空, 默认：myChart ，注意：同个页面显示多个折线图且需要用js操作数据，则这个名称必须不能重复，不需要js操作数据的请无视。
-.参数 配置信息, 文本型, 可空, 请使用创建标准配置()自动创建。留空时将创建空白折线图，数据使用js后期加载。
+.参数 配置信息, 文本型, 可空, 请使用“标准配置_***()”自动创建或者“增改json()”手动创建。留空时将创建空白图形，数据使用js后期加载。
 .参数 是否要显示loading等待, 逻辑型, 可空, 默认：假。数据比较多加载慢时可设置显示loading，数据使用js后期加载。
 .局部变量 临时文本, 文本型
 
@@ -96,7 +96,7 @@
 返回 (临时文本)
 
 
-.子程序 折线图_创建标准配置, 文本型, 公开, 使用标准配置创建图形，返回值的配置内容可使用“增改配置（）”详细修改。
+.子程序 标准配置_折线图, 文本型, 公开, 生成标准折线图，返回值的配置内容可使用“增改json（）”详细修改。
 .参数 图表主标题, 文本型, 可空, 留空则不显示。
 .参数 图表副标题, 文本型, 可空, 留空则不显示。
 .参数 X轴数据组, 文本型, 可空 数组, 此为X轴的标尺，此数组内容应与Y轴数据对应
@@ -172,8 +172,157 @@ root.Put (“tooltip”, 鼠标提示)
 返回 (json.ToJsonString (root))
 
 
+.子程序 标准配置_K线图, 文本型, 公开, 生成标准K线图，返回值的配置内容可使用“增改json（）”详细修改。
+.参数 图表主标题, 文本型, 可空, 留空则不显示。
+.参数 图表副标题, 文本型, 可空, 留空则不显示。
+.参数 数据组, K线数据格式, 数组, 数据格式：日期，开盘(open)，收盘(close)，最低(lowest)，最高(highest)
+.参数 均线天数MA, 文本型, 可空, 为空则不显示，也支持多个，以符号“+”分割，例如：“5+10+20+30”
+.局部变量 计数器1, 整数型
+.局部变量 计数器2, 整数型
+.局部变量 temp1, 文本型, , "0"
+.局部变量 temp2, 文本型
+.局部变量 temp3, 双精度小数型, , "0"
+.局部变量 option, 文本型
+.局部变量 MA数组, 整数型, , "0"
+
+.如果真 (是否为空 (均线天数MA) ＝ 假)
+    temp1 ＝ 分割文本 (均线天数MA, “+”, )
+    .计次循环首 (取数组成员数 (temp1), 计数器1)
+        .如果真 (到整数 (temp1 [计数器1]) ＞ 0)
+            加入成员 (MA数组, 到整数 (temp1 [计数器1]))
+        .如果真结束
+
+    .计次循环尾 ()
+    清除数组 (temp1)
+    加入成员 (temp1, “日K”)
+    .计次循环首 (取数组成员数 (MA数组), 计数器1)
+        加入成员 (temp1, “MA” ＋ 到文本 (MA数组 [计数器1]))
+    .计次循环尾 ()
+.如果真结束
+' == 标题组件
+.如果真 (是否为空 (图表主标题) ＝ 假 且 删首尾空 (图表主标题) ≠ “”)
+    option ＝ 增改json (option, “title.text”, 图表主标题, , , , , )
+.如果真结束
+.如果真 (是否为空 (图表副标题) ＝ 假 且 删首尾空 (图表副标题) ≠ “”)
+    option ＝ 增改json (option, “title.subtext”, 图表副标题, , , , , )
+.如果真结束
+
+' == 鼠标提示
+option ＝ 增改json (option, “tooltip.trigger”, “axis”, , , , , )
+option ＝ 增改json (option, “tooltip.axisPointer”, , , , , 增改json (“”, “type”, “line”, , , , , ), )
+
+' == 图例
+option ＝ 增改json (option, “legend.data”, , , , 创建json数组 (temp1, , ), , )
+
+' == 网格
+option ＝ 增改json (option, “grid.left”, “10%”, , , , , )
+option ＝ 增改json (option, “grid.right”, “10%”, , , , , )
+option ＝ 增改json (option, “grid.bottom”, “15%”, , , , , )
+
+' == X轴
+option ＝ 增改json (option, “xAxis.type”, “category”, , , , , )
+option ＝ 增改json (option, “xAxis.scale”, , 真, , , , )
+option ＝ 增改json (option, “xAxis.boundaryGap”, , 假, , , , )
+option ＝ 增改json (option, “xAxis.axisLine”, , , , , 增改json (“”, “onZero”, , 假, , , , ), )
+option ＝ 增改json (option, “xAxis.splitLine”, , , , , 增改json (“”, “show”, , 假, , , , ), )
+option ＝ 增改json (option, “xAxis.splitNumber”, , , 20, , , )
+option ＝ 增改json (option, “xAxis.min”, “dataMin”, , , , , )
+option ＝ 增改json (option, “xAxis.max”, “dataMax”, , , , , )
+清除数组 (temp1)
+.计次循环首 (取数组成员数 (数据组), 计数器1)
+    加入成员 (temp1, 数据组 [计数器1].日期)
+.计次循环尾 ()
+option ＝ 增改json (option, “xAxis.data”, , , , 创建json数组 (temp1, , ), , )
+
+' == Y轴
+option ＝ 增改json (option, “yAxis.scale”, , 真, , , , )
+option ＝ 增改json (option, “yAxis.splitArea”, , , , , 增改json (“”, “show”, , 真, , , , ), )
+
+' == 缩放控制条
+重定义数组 (temp1, 假, 2)
+temp1 [1] ＝ 增改json (temp1 [1], “type”, “inside”, , , , , )
+temp1 [1] ＝ 增改json (temp1 [1], “start”, , , 50, , , )
+temp1 [1] ＝ 增改json (temp1 [1], “end”, , , 100, , , )
+temp1 [2] ＝ 增改json (temp1 [2], “show”, , 真, , , , )
+temp1 [2] ＝ 增改json (temp1 [2], “type”, “slider”, , , , , )
+temp1 [2] ＝ 增改json (temp1 [2], “y”, “80%”, , , , , )
+temp1 [2] ＝ 增改json (temp1 [2], “start”, , , 50, , , )
+temp1 [2] ＝ 增改json (temp1 [2], “end”, , , 100, , , )
+option ＝ 增改json (option, “dataZoom”, , , , 创建json数组 (temp1, , ), , )
+
+' == 数据组
+' 重定义数组 (temp1, 假, 2)
+' temp1 [1] ＝ 增改json (temp1 [1], “label.normal.show”, , 假, , , , )
+' temp1 [1] ＝ 增改json (temp1 [1], “label.emphasis.show”, , 假, , , , )
+' temp1 [1] ＝ 增改json (temp1 [1], “name”, “from lowest to highest”, , , , , )
+' temp1 [1] ＝ 增改json (temp1 [1], “type”, “min”, , , , , )
+' temp1 [1] ＝ 增改json (temp1 [1], “valueDim”, “lowest”, , , , , )
+' temp1 [1] ＝ 增改json (temp1 [1], “symbol”, “circle”, , , , , )
+' temp1 [1] ＝ 增改json (temp1 [1], “symbolSize”, , , 10, , , )
+' temp1 [2] ＝ 增改json (temp1 [2], “label.normal.show”, , 假, , , , )
+' temp1 [2] ＝ 增改json (temp1 [2], “label.emphasis.show”, , 假, , , , )
+' temp1 [2] ＝ 增改json (temp1 [2], “type”, “max”, , , , , )
+' temp1 [2] ＝ 增改json (temp1 [2], “valueDim”, “highest”, , , , , )
+' temp1 [2] ＝ 增改json (temp1 [2], “symbol”, “circle”, , , , , )
+' temp1 [2] ＝ 增改json (temp1 [2], “symbolSize”, , , 10, , , )
+
+' == 数据组
+清除数组 (temp1)
+.计次循环首 (取数组成员数 (数据组), 计数器1)
+    清除数组 (temp3)
+    加入成员 (temp3, 数据组 [计数器1].开盘open)
+    加入成员 (temp3, 数据组 [计数器1].收盘close)
+    加入成员 (temp3, 数据组 [计数器1].最低lowest)
+    加入成员 (temp3, 数据组 [计数器1].最高highest)
+    加入成员 (temp1, 创建json数组 (, temp3, ))
+.计次循环尾 ()
+temp2 ＝ 增改json (“”, “data”, , , , 创建json数组 (temp1, , ), , )  ' ?????????
+重定义数组 (temp1, 假, 取数组成员数 (MA数组))
+temp1 [1] ＝ 增改json (temp2, “name”, “日K”, , , , , )
+temp1 [1] ＝ 增改json (temp1 [1], “type”, “candlestick”, , , , , )
+
+.计次循环首 (取数组成员数 (MA数组), 计数器1)
+    temp2 ＝ “”
+    temp2 ＝ 增改json (temp2, “name”, “MA” ＋ 到文本 (MA数组 [计数器1]), , , , , )
+    temp2 ＝ 增改json (temp2, “type”, “line”, , , , , )
+    temp2 ＝ 增改json (temp2, “data”, , , , 计算价格均线MA (数据组, MA数组 [计数器1]), , )  ' ?????????
+    temp2 ＝ 增改json (temp2, “smooth”, , 真, , , , )
+    temp2 ＝ 增改json (temp2, “lineStyle.normal.opacity”, , , 0.5, , , )
+    加入成员 (temp1, temp2)
+.计次循环尾 ()
+option ＝ 增改json (option, “series”, , , , 创建json数组 (temp1, , ), , )
+
+
+返回 (option)
+
+
+.子程序 计算价格均线MA, 文本型
+.参数 数据组, K线数据格式, 数组
+.参数 天数, 整数型
+.局部变量 计数器1, 整数型
+.局部变量 计数器2, 整数型
+.局部变量 计数器3, 双精度小数型
+.局部变量 结果数组, 双精度小数型, , "0"
+.局部变量 临时文本数组, 文本型, , "0"
+.局部变量 临时文本, 文本型
+
+.计次循环首 (取数组成员数 (数据组), 计数器1)
+    .如果真 (计数器1 ＜ 天数 ＋ 1)
+        加入成员 (临时文本数组, “-”)
+        到循环尾 ()
+    .如果真结束
+    计数器3 ＝ 0
+    .计次循环首 (天数, 计数器2)
+        计数器3 ＝ 计数器3 ＋ 数据组 [计数器1 － 计数器2 ＋ 1].收盘close
+    .计次循环尾 ()
+    加入成员 (结果数组, 计数器3 ÷ 天数)
+.计次循环尾 ()
+临时文本 ＝ 创建json数组 (临时文本数组, , )
+临时文本 ＝ 取文本左边 (临时文本, 取文本长度 (临时文本) － 1) ＋ “,” ＋ 取文本右边 (创建json数组 (, 结果数组, ), 取文本长度 (创建json数组 (, 结果数组, )) － 1)
+返回 (临时文本)
+
 .子程序 增改json, 文本型, 公开, 增加或修改json中的内容。
-.参数 原json, 文本型, , json
+.参数 原json, 文本型, 可空, json
 .参数 操作路径, 文本型, , 类似“a.b.c"，英文句点隔开
 .参数 文本值, 文本型, 可空, 多选一；...
 .参数 逻辑值, 逻辑型, 可空, 多选一；真/假
