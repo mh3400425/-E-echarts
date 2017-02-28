@@ -52,6 +52,7 @@ n.inRange.setStyle({fill:a.barColor,opacity:a.opacity}).setShape("points",a.barP
 	var myChart = echarts.init(dom);
 	var app = {};
 	option = {
+    "backgroundColor" : "#21202D",
     "dataZoom" : [
         {
             "end" : 100,
@@ -62,6 +63,9 @@ n.inRange.setStyle({fill:a.barColor,opacity:a.opacity}).setShape("points",a.barP
             "end" : 100,
             "show" : true,
             "start" : 50,
+            "textStyle" : {
+                "color" : "#8392A5"
+            },
             "type" : "slider",
             "y" : "80%"
         }
@@ -75,9 +79,12 @@ n.inRange.setStyle({fill:a.barColor,opacity:a.opacity}).setShape("points",a.barP
         "data" : [
             "»’K",
             "MA5",
-            "MA10",
-            "MA20"
-        ]
+            "MA10"
+        ],
+        "inactiveColor" : "#777",
+        "textStyle" : {
+            "color" : "#fff"
+        }
     },
     "series" : [
         {
@@ -611,6 +618,14 @@ n.inRange.setStyle({fill:a.barColor,opacity:a.opacity}).setShape("points",a.barP
                     2190.1
                 ]
             ],
+            "itemStyle" : {
+                "normal" : {
+                    "borderColor" : "#FD1050",
+                    "borderColor0" : "#0CF49B",
+                    "color" : "#FD1050",
+                    "color0" : "#0CF49B"
+                }
+            },
             "name" : "»’K",
             "type" : "candlestick"
         },
@@ -815,116 +830,22 @@ n.inRange.setStyle({fill:a.barColor,opacity:a.opacity}).setShape("points",a.barP
             "name" : "MA10",
             "smooth" : true,
             "type" : "line"
-        },
-        {
-            "data" : [
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                2373.506,
-                2376.9165,
-                2373.2615,
-                2371.628,
-                2369.863,
-                2366.8065,
-                2361.786,
-                2355.908,
-                2348.5815,
-                2340.056,
-                2332.6435,
-                2324.9435,
-                2315.8665,
-                2309.5925,
-                2305.602,
-                2305.5165,
-                2306.2225,
-                2306.2675,
-                2306.484,
-                2305.886,
-                2299.4215,
-                2293.277,
-                2291.327,
-                2286.3985,
-                2280.304,
-                2274.669,
-                2270.027,
-                2265.804,
-                2262.4515,
-                2259.592,
-                2255.175,
-                2250.9975,
-                2248.6865,
-                2245.695,
-                2242.0585,
-                2237.955,
-                2230.768,
-                2225.348,
-                2220.43,
-                2214.2625,
-                2211.1535,
-                2209.5975,
-                2209.436,
-                2209.8275,
-                2210.878,
-                2211.947,
-                2213,
-                2213.7895,
-                2213.6625,
-                2214.5635,
-                2218.057,
-                2222.458,
-                2227.7675,
-                2233.143,
-                2236.031,
-                2237.706,
-                2242.9055,
-                2246.6435,
-                2252.744,
-                2260.0495,
-                2267.231,
-                2271.9855,
-                2275.3895,
-                2277.232,
-                2278.4635,
-                2278.9205,
-                2277.124,
-                2272.4455
-            ],
-            "lineStyle" : {
-                "normal" : {
-                    "opacity" : 0.5
-                }
-            },
-            "name" : "MA20",
-            "smooth" : true,
-            "type" : "line"
         }
     ],
     "tooltip" : {
         "axisPointer" : {
+            "linStyle" : {
+                "color" : "#376df4"
+            },
             "type" : "line"
         },
         "trigger" : "axis"
     },
     "xAxis" : {
         "axisLine" : {
+            "lineStyle" : {
+                "color" : "#8392A5"
+            },
             "onZero" : false
         },
         "boundaryGap" : false,
@@ -1028,9 +949,21 @@ n.inRange.setStyle({fill:a.barColor,opacity:a.opacity}).setShape("points",a.barP
         "type" : "category"
     },
     "yAxis" : {
+        "axisLine" : {
+            "lineStyle" : {
+                "color" : "#8392A5"
+            }
+        },
         "scale" : true,
         "splitArea" : {
-            "show" : true
+            "show" : false
+        },
+        "splitLine" : {
+            "lineStyle" : {
+                "color" : [
+                    "#800000"
+                ]
+            }
         }
     }
 };;

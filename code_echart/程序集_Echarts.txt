@@ -179,7 +179,8 @@ root.Put (“tooltip”, 鼠标提示)
 .参数 图表主标题, 文本型, 可空, 留空则不显示。
 .参数 图表副标题, 文本型, 可空, 留空则不显示。
 .参数 数据组, K线数据格式, 数组, 数据格式：日期，开盘(open)，收盘(close)，最低(lowest)，最高(highest)
-.参数 均线天数MA, 文本型, 可空, 为空则不显示，也支持多个，以符号“+”分割，例如：“5+10+20+30”
+.参数 均线天数MA, 文本型, 可空, 为空则不显示，也支持多个，以符号“+”分割，例如：“5+10+20+30”，计算价格均线将影响K线生成时间（大约增加10%~30%）
+.参数 夜间模式, 逻辑型, 可空, 默认关闭。
 .局部变量 计数器1, 整数型
 .局部变量 计数器2, 整数型
 .局部变量 temp1, 文本型, , "0"
@@ -187,7 +188,19 @@ root.Put (“tooltip”, 鼠标提示)
 .局部变量 temp3, 双精度小数型, , "0"
 .局部变量 option, 文本型
 .局部变量 MA数组, 整数型, , "0"
+.局部变量 test_time, 整数型
 
+' test_time ＝ 取启动时间 ()
+option ＝ #JSON_K线option
+.如果真 (夜间模式)
+    option ＝ 子文本替换 (option, #引号 ＋ “test” ＋ #引号 ＋ “:” ＋ #引号 ＋ “test” ＋ #引号, #引号 ＋ “textStyle” ＋ #引号 ＋ “:{” ＋ #引号 ＋ “color” ＋ #引号 ＋ “:” ＋ #引号 ＋ “#8392A5” ＋ #引号 ＋ “}”, , , 真)
+    option ＝ 增改json (option, “backgroundColor”, “#21202D”, , , , , )
+    option ＝ 增改json (option, “tooltip.axisPointer.linStyle.color”, “#376df4”, , , , , )
+    option ＝ 增改json (option, “xAxis.axisLine.lineStyle.color”, “#8392A5”, , , , , )
+    option ＝ 增改json (option, “yAxis.axisLine.lineStyle.color”, “#8392A5”, , , , , )
+    option ＝ 增改json (option, “yAxis.splitLine.lineStyle.color”, , , , “[” ＋ #引号 ＋ “#800000” ＋ #引号 ＋ “]”, , )
+    option ＝ 增改json (option, “yAxis.splitArea.show”, , 假, , , , )
+.如果真结束
 .如果真 (是否为空 (均线天数MA) ＝ 假)
     temp1 ＝ 分割文本 (均线天数MA, “+”, )
     .计次循环首 (取数组成员数 (temp1), 计数器1)
@@ -196,12 +209,12 @@ root.Put (“tooltip”, 鼠标提示)
         .如果真结束
 
     .计次循环尾 ()
-    清除数组 (temp1)
-    加入成员 (temp1, “日K”)
-    .计次循环首 (取数组成员数 (MA数组), 计数器1)
-        加入成员 (temp1, “MA” ＋ 到文本 (MA数组 [计数器1]))
-    .计次循环尾 ()
 .如果真结束
+清除数组 (temp1)
+加入成员 (temp1, “日K”)
+.计次循环首 (取数组成员数 (MA数组), 计数器1)
+    加入成员 (temp1, “MA” ＋ 到文本 (MA数组 [计数器1]))
+.计次循环尾 ()
 ' == 标题组件
 .如果真 (是否为空 (图表主标题) ＝ 假 且 删首尾空 (图表主标题) ≠ “”)
     option ＝ 增改json (option, “title.text”, 图表主标题, , , , , )
@@ -210,64 +223,29 @@ root.Put (“tooltip”, 鼠标提示)
     option ＝ 增改json (option, “title.subtext”, 图表副标题, , , , , )
 .如果真结束
 
-' == 鼠标提示
-option ＝ 增改json (option, “tooltip.trigger”, “axis”, , , , , )
-option ＝ 增改json (option, “tooltip.axisPointer”, , , , , 增改json (“”, “type”, “line”, , , , , ), )
+' 调试输出 (“a:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
 
 ' == 图例
 option ＝ 增改json (option, “legend.data”, , , , 创建json数组 (temp1, , ), , )
+.如果真 (夜间模式)
+    option ＝ 增改json (option, “legend.inactiveColor”, “#777”, , , , , )
+    option ＝ 增改json (option, “legend.textStyle.color”, “#fff”, , , , , )
+.如果真结束
 
-' == 网格
-option ＝ 增改json (option, “grid.left”, “10%”, , , , , )
-option ＝ 增改json (option, “grid.right”, “10%”, , , , , )
-option ＝ 增改json (option, “grid.bottom”, “15%”, , , , , )
+' 调试输出 (“b:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
 
-' == X轴
-option ＝ 增改json (option, “xAxis.type”, “category”, , , , , )
-option ＝ 增改json (option, “xAxis.scale”, , 真, , , , )
-option ＝ 增改json (option, “xAxis.boundaryGap”, , 假, , , , )
-option ＝ 增改json (option, “xAxis.axisLine”, , , , , 增改json (“”, “onZero”, , 假, , , , ), )
-option ＝ 增改json (option, “xAxis.splitLine”, , , , , 增改json (“”, “show”, , 假, , , , ), )
-option ＝ 增改json (option, “xAxis.splitNumber”, , , 20, , , )
-option ＝ 增改json (option, “xAxis.min”, “dataMin”, , , , , )
-option ＝ 增改json (option, “xAxis.max”, “dataMax”, , , , , )
 清除数组 (temp1)
 .计次循环首 (取数组成员数 (数据组), 计数器1)
     加入成员 (temp1, 数据组 [计数器1].日期)
 .计次循环尾 ()
 option ＝ 增改json (option, “xAxis.data”, , , , 创建json数组 (temp1, , ), , )
+' 调试输出 (“c:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
 
-' == Y轴
-option ＝ 增改json (option, “yAxis.scale”, , 真, , , , )
-option ＝ 增改json (option, “yAxis.splitArea”, , , , , 增改json (“”, “show”, , 真, , , , ), )
-
-' == 缩放控制条
-重定义数组 (temp1, 假, 2)
-temp1 [1] ＝ 增改json (temp1 [1], “type”, “inside”, , , , , )
-temp1 [1] ＝ 增改json (temp1 [1], “start”, , , 50, , , )
-temp1 [1] ＝ 增改json (temp1 [1], “end”, , , 100, , , )
-temp1 [2] ＝ 增改json (temp1 [2], “show”, , 真, , , , )
-temp1 [2] ＝ 增改json (temp1 [2], “type”, “slider”, , , , , )
-temp1 [2] ＝ 增改json (temp1 [2], “y”, “80%”, , , , , )
-temp1 [2] ＝ 增改json (temp1 [2], “start”, , , 50, , , )
-temp1 [2] ＝ 增改json (temp1 [2], “end”, , , 100, , , )
-option ＝ 增改json (option, “dataZoom”, , , , 创建json数组 (temp1, , ), , )
-
-' == 数据组
-' 重定义数组 (temp1, 假, 2)
-' temp1 [1] ＝ 增改json (temp1 [1], “label.normal.show”, , 假, , , , )
-' temp1 [1] ＝ 增改json (temp1 [1], “label.emphasis.show”, , 假, , , , )
-' temp1 [1] ＝ 增改json (temp1 [1], “name”, “from lowest to highest”, , , , , )
-' temp1 [1] ＝ 增改json (temp1 [1], “type”, “min”, , , , , )
-' temp1 [1] ＝ 增改json (temp1 [1], “valueDim”, “lowest”, , , , , )
-' temp1 [1] ＝ 增改json (temp1 [1], “symbol”, “circle”, , , , , )
-' temp1 [1] ＝ 增改json (temp1 [1], “symbolSize”, , , 10, , , )
-' temp1 [2] ＝ 增改json (temp1 [2], “label.normal.show”, , 假, , , , )
-' temp1 [2] ＝ 增改json (temp1 [2], “label.emphasis.show”, , 假, , , , )
-' temp1 [2] ＝ 增改json (temp1 [2], “type”, “max”, , , , , )
-' temp1 [2] ＝ 增改json (temp1 [2], “valueDim”, “highest”, , , , , )
-' temp1 [2] ＝ 增改json (temp1 [2], “symbol”, “circle”, , , , , )
-' temp1 [2] ＝ 增改json (temp1 [2], “symbolSize”, , , 10, , , )
+' 调试输出 (“d:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
 
 ' == 数据组
 清除数组 (temp1)
@@ -280,9 +258,22 @@ option ＝ 增改json (option, “dataZoom”, , , , 创建json数组 (temp1, , 
     加入成员 (temp1, 创建json数组 (, temp3, ))
 .计次循环尾 ()
 temp2 ＝ 增改json (“”, “data”, , , , 创建json数组 (temp1, , ), , )  ' ?????????
-重定义数组 (temp1, 假, 取数组成员数 (MA数组))
+' 调试输出 (“生成数据组:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
+
+重定义数组 (temp1, 假, 取数组成员数 (MA数组) ＋ 1)
+
 temp1 [1] ＝ 增改json (temp2, “name”, “日K”, , , , , )
 temp1 [1] ＝ 增改json (temp1 [1], “type”, “candlestick”, , , , , )
+.如果真 (夜间模式)
+    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.color”, “#FD1050”, , , , , )
+    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.color0”, “#0CF49B”, , , , , )
+    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.borderColor”, “#FD1050”, , , , , )
+    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.borderColor0”, “#0CF49B”, , , , , )
+.如果真结束
+
+' 调试输出 (“e1:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
 
 .计次循环首 (取数组成员数 (MA数组), 计数器1)
     temp2 ＝ “”
@@ -292,8 +283,17 @@ temp1 [1] ＝ 增改json (temp1 [1], “type”, “candlestick”, , , , , )
     temp2 ＝ 增改json (temp2, “smooth”, , 真, , , , )
     temp2 ＝ 增改json (temp2, “lineStyle.normal.opacity”, , , 0.5, , , )
     加入成员 (temp1, temp2)
+    ' 调试输出 (“e2:”, 取启动时间 () － test_time)
+    ' test_time ＝ 取启动时间 ()
+
 .计次循环尾 ()
+' 调试输出 (创建json数组 (temp1, , ))
+' 调试输出 (“e3:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
+
 option ＝ 增改json (option, “series”, , , , 创建json数组 (temp1, , ), , )
+' 调试输出 (“f:”, 取启动时间 () － test_time)
+' test_time ＝ 取启动时间 ()
 
 
 返回 (option)
@@ -542,15 +542,28 @@ path [1] ＝ root.Get (路径 [1])
 返回 (json.ToJsonString (temp, , , ))
 
 
-.子程序 关闭loading动画, , 公开
+.子程序 关闭loading动画, , 公开, 关闭指定图形的Loading动画。
 .参数 浏览框, 超文本浏览框
+.参数 图形对象名称, 文本型, 可空, 单个图形的话此参数可以省略。
 
-执行JS代码 (浏览框, 集_图形对象名称 ＋ “.hideLoading()”)
+.如果 (是否为空 (图形对象名称))
+    执行JS代码 (浏览框, 集_图形对象名称 ＋ “.hideLoading()”)
+.否则
+    执行JS代码 (浏览框, 图形对象名称 ＋ “.hideLoading()”)
+.如果结束
 
 
-.子程序 动态异步更新数据, , 公开, 无需刷新整个页面动态异步更新图形数据（仅支持ie内核的超文本浏览框，其他内核浏览框请直接调用js，更简单方便）
+.子程序 动态异步更新数据, , 公开, 无需刷新整个页面动态异步更新指定图形数据（仅支持ie内核的超文本浏览框，其他内核浏览框请直接调用js，更简单方便）
 .参数 浏览框, 超文本浏览框
+.参数 图形对象名称, 文本型, 可空, 单个图形的话此参数可以省略。
 .参数 图形配置内容json, 文本型, , 可以使用“增改json()”生成，不怕麻烦不担心写错的也可以自己手写。
 
-浏览框.地址 ＝ 将多行js代码转换为单行 (“javascript:” ＋ 集_图形对象名称 ＋ “.setOption(” ＋ 图形配置内容json ＋ “)”)
+.如果 (是否为空 (图形对象名称))
+    浏览框.地址 ＝ 将多行js代码转换为单行 (“javascript:” ＋ 集_图形对象名称 ＋ “.setOption(” ＋ 图形配置内容json ＋ “)”)
+
+.否则
+    浏览框.地址 ＝ 将多行js代码转换为单行 (“javascript:” ＋ 图形对象名称 ＋ “.setOption(” ＋ 图形配置内容json ＋ “)”)
+
+.如果结束
+
 
