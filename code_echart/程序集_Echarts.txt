@@ -99,83 +99,62 @@
 返回 (临时文本)
 
 
-.子程序 标准配置_折线图, 文本型, 公开, 生成标准折线图，返回值的配置内容可使用“增改json（）”详细修改。
-.参数 图表主标题, 文本型, 可空, 留空则不显示。
-.参数 图表副标题, 文本型, 可空, 留空则不显示。
+.子程序 标准配置_折线图, 文本型, 公开, 生成标准折线图，返回值内容为标准JSON文本。
+.参数 图表主标题, 文本型, 可空, 留空则不显示
+.参数 图表副标题, 文本型, 可空, 留空则不显示
 .参数 X轴数据组, 文本型, 可空 数组, 此为X轴的标尺，此数组内容应与Y轴数据对应
 .参数 Y轴数据组, Y轴数据类型, 可空 数组, 为空时可快速显示空坐标轴（提升使用体验），然后可以使用js后期异步加载数据。
-.局部变量 json, STJson
-.局部变量 root, STJsonValue
-.局部变量 标题, STJsonValue
-.局部变量 X轴, STJsonValue
-.局部变量 Y轴, STJsonValue
-.局部变量 鼠标提示, STJsonValue
-.局部变量 图例, STJsonValue
-.局部变量 Y数据值, STJsonValue
-.局部变量 Y数据_单, STJsonValue
-.局部变量 Y数据_根, STJsonValue
-.局部变量 临时, STJsonValue, , "0"
+.局部变量 json, eCharts_JSON类
+.局部变量 temp_文本, 文本型
 .局部变量 计数器1, 整数型
 .局部变量 计数器2, 整数型
-.局部变量 temp, 文本型, , "0"
 
-.如果真 (是否为空 (图表主标题) ＝ 假 且 删首尾空 (图表主标题) ≠ “”)
-    标题.Put (“text”, json.CreateStringValue (图表主标题))
+json.解析 (“{}”)
+
+.如果真 (是否为空 (图表主标题) ＝ 假 或 是否为空 (图表副标题) ＝ 假)
+    json.置新值 (“title”, “{}”)
+    .如果真 (是否为空 (图表主标题) ＝ 假 且 删首尾空 (图表主标题) ≠ “”)
+        json.置新值 (“title.text”, , 图表主标题)
+    .如果真结束
+    .如果真 (是否为空 (图表副标题) ＝ 假 且 删首尾空 (图表副标题) ≠ “”)
+        json.置新值 (“title.subtext”, , 图表副标题)
+    .如果真结束
+
 .如果真结束
-.如果真 (是否为空 (图表副标题) ＝ 假 且 删首尾空 (图表副标题) ≠ “”)
-    标题.Put (“subtext”, json.CreateStringValue (图表副标题))
-.如果真结束
+json.置新值 (“xAxis.type”, , “category”)
+json.置新值 (“xAxis.boundaryGap”, , , , 真)
+json.数组_加入成员 (“xAxis.data”, 创建JSON数组 (X轴数据组))
 
-X轴.Put (“type”, json.CreateStringValue (“category”))  ' category为类目轴，必须通过data设置类目数据，可选：value/category/time/log（数值轴/类目轴/时间轴/对数轴）
-X轴.Put (“boundaryGap”, json.CreateBoolValue (真))  ' 两边是否留空白
-.计次循环首 (取数组成员数 (X轴数据组), 计数器1)
-    Y数据值.Add (json.CreateStringValue (X轴数据组 [计数器1]))
-.计次循环尾 ()
-X轴.Put (“data”, Y数据值)
+json.置新值 (“yAxis.type”, , “value”)
 
-Y轴.Put (“type”, json.CreateStringValue (“value”))  ' 等同于X轴的type，可选：value/category/time/log（数值轴/类目轴/时间轴/对数轴）
-
-Y数据_根.Clear ()
+json.数组_加入成员 (“series”, “{}”)
 .计次循环首 (取数组成员数 (Y轴数据组), 计数器1)
-    Y数据值.Clear ()
-    Y数据_单.Clear ()
-    .计次循环首 (取数组成员数 (Y轴数据组 [计数器1].数据组), 计数器2)
-        Y数据值.Add (json.CreateDoubleValue (到数值 (Y轴数据组 [计数器1].数据组 [计数器2])))
-    .计次循环尾 ()
-    Y数据_单.Put (“data”, Y数据值)
-    Y数据_单.Put (“name”, json.CreateStringValue (Y轴数据组 [计数器1].名称))
-    Y数据_单.Put (“type”, json.CreateStringValue (Y轴数据组 [计数器1].类型))
-    Y数据_单.Put (“smooth”, json.CreateBoolValue (Y轴数据组 [计数器1].是否平滑曲线))
-    重定义数组 (临时, 假, 2)
-    临时 [2].Add (json.CreateNullValue ())
-    临时 [1].Put (“normal”, 临时 [2])
-    ' Y数据_单.Put (“areaStyle”, 临时 [1])
-    Y数据_根.Add (Y数据_单)
+    计数器2 ＝ json.数组_取长度 (“series”) － 1
+    json.数组_加入成员 (“series[” ＋ 到文本 (计数器2) ＋ “].data”, 创建JSON数组 (, , , Y轴数据组 [计数器1].数据组))
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].name”, , Y轴数据组 [计数器1].名称)
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].type”, , Y轴数据组 [计数器1].类型)
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].smooth”, , , , Y轴数据组 [计数器1].是否平滑曲线)
 .计次循环尾 ()
 
-鼠标提示.Put (“show”, json.CreateBoolValue (真))
-鼠标提示.Put (“trigger”, json.CreateStringValue (“item”))
+json.置新值 (“legend.show”, , , , 真)
+temp_文本 ＝ “”
+.计次循环首 (取数组成员数 (Y轴数据组), 计数器1)
+    .如果 (计数器1 ＝ 1)
+        temp_文本 ＝ #引号 ＋ Y轴数据组 [计数器1].名称 ＋ #引号
+    .否则
+        temp_文本 ＝ #引号 ＋ temp_文本 ＋ #引号 ＋ “,” ＋ #引号 ＋ Y轴数据组 [计数器1].名称 ＋ #引号
+    .如果结束
 
-图例.Put (“show”, json.CreateBoolValue (真))
-Y数据值.Clear ()
-.计次循环首 (Y数据_根.Size (), 计数器1)
-    Y数据值.Add (json.CreateStringValue (Y数据_根.GetAt (计数器1).Get (“name”).AsString ()))
 .计次循环尾 ()
-图例.Put (“data”, Y数据值)
+json.数组_加入成员 (“legend.data”, temp_文本)
 
-.如果真 (删首尾空 (图表主标题 ＋ 图表副标题) ≠ “”)
-    root.Put (“title”, 标题)
-.如果真结束
-root.Put (“xAxis”, X轴)
-root.Put (“yAxis”, Y轴)
-root.Put (“series”, Y数据_根)
-root.Put (“legend”, 图例)
-root.Put (“tooltip”, 鼠标提示)
+json.置新值 (“tooltip.show”, , , , 真)
+json.置新值 (“tooltip.trigger”, , “item”)
 
-返回 (json.ToJsonString (root))
+返回 (json.取代码 ())
 
 
-.子程序 标准配置_K线图, 文本型, 公开, 生成标准K线图，返回值的配置内容可使用“增改json（）”详细修改。
+.子程序 标准配置_K线图, 文本型, 公开, 生成标准K线图，返回值内容为标准JSON文本。
 .参数 图表主标题, 文本型, 可空, 留空则不显示。
 .参数 图表副标题, 文本型, 可空, 留空则不显示。
 .参数 数据组, K线数据格式, 数组, 数据格式：日期，开盘(open)，收盘(close)，最低(lowest)，最高(highest)
@@ -183,123 +162,89 @@ root.Put (“tooltip”, 鼠标提示)
 .参数 夜间模式, 逻辑型, 可空, 默认关闭。
 .局部变量 计数器1, 整数型
 .局部变量 计数器2, 整数型
-.局部变量 temp1, 文本型, , "0"
-.局部变量 temp2, 文本型
-.局部变量 temp3, 双精度小数型, , "0"
-.局部变量 option, 文本型
+.局部变量 json, eCharts_JSON类
+.局部变量 临时文本数组, 文本型, , "0"
+.局部变量 临时小数数组, 双精度小数型, , "0"
 .局部变量 MA数组, 整数型, , "0"
-.局部变量 test_time, 整数型
 
-' test_time ＝ 取启动时间 ()
-option ＝ #JSON_K线option
+json.解析 (#JSON_K线option)
 .如果真 (夜间模式)
-    option ＝ 子文本替换 (option, #引号 ＋ “test” ＋ #引号 ＋ “:” ＋ #引号 ＋ “test” ＋ #引号, #引号 ＋ “textStyle” ＋ #引号 ＋ “:{” ＋ #引号 ＋ “color” ＋ #引号 ＋ “:” ＋ #引号 ＋ “#8392A5” ＋ #引号 ＋ “}”, , , 真)
-    option ＝ 增改json (option, “backgroundColor”, “#21202D”, , , , , )
-    option ＝ 增改json (option, “tooltip.axisPointer.linStyle.color”, “#376df4”, , , , , )
-    option ＝ 增改json (option, “xAxis.axisLine.lineStyle.color”, “#8392A5”, , , , , )
-    option ＝ 增改json (option, “yAxis.axisLine.lineStyle.color”, “#8392A5”, , , , , )
-    option ＝ 增改json (option, “yAxis.splitLine.lineStyle.color”, , , , “[” ＋ #引号 ＋ “#800000” ＋ #引号 ＋ “]”, , )
-    option ＝ 增改json (option, “yAxis.splitArea.show”, , 假, , , , )
+    json.置新值 (“dataZoom[1].textStyle.color”, , “#8392A5”)
+    json.置新值 (“backgroundColor”, , “#21202D”)
+    json.置新值 (“tooltip.axisPointer.linStyle.color”, , “#376df4”)
+    json.置新值 (“xAxis.axisLine.lineStyle.color”, , “#8392A5”)
+    json.置新值 (“yAxis.axisLine.lineStyle.color”, , “#8392A5”)
+    json.数组_加入成员 (“yAxis.splitLine.lineStyle.color”, , “#8392A5”)
 .如果真结束
 .如果真 (是否为空 (均线天数MA) ＝ 假)
-    temp1 ＝ 分割文本 (均线天数MA, “+”, )
-    .计次循环首 (取数组成员数 (temp1), 计数器1)
-        .如果真 (到整数 (temp1 [计数器1]) ＞ 0)
-            加入成员 (MA数组, 到整数 (temp1 [计数器1]))
+    临时文本数组 ＝ 分割文本 (均线天数MA, “+”, )
+    .计次循环首 (取数组成员数 (临时文本数组), 计数器1)
+        .如果真 (到整数 (临时文本数组 [计数器1]) ＞ 0)
+            加入成员 (MA数组, 到整数 (临时文本数组 [计数器1]))
         .如果真结束
 
     .计次循环尾 ()
 .如果真结束
-清除数组 (temp1)
-加入成员 (temp1, “日K”)
+清除数组 (临时文本数组)
+加入成员 (临时文本数组, “日K”)
 .计次循环首 (取数组成员数 (MA数组), 计数器1)
-    加入成员 (temp1, “MA” ＋ 到文本 (MA数组 [计数器1]))
+    加入成员 (临时文本数组, “MA” ＋ 到文本 (MA数组 [计数器1]))
 .计次循环尾 ()
 ' == 标题组件
 .如果真 (是否为空 (图表主标题) ＝ 假 且 删首尾空 (图表主标题) ≠ “”)
-    option ＝ 增改json (option, “title.text”, 图表主标题, , , , , )
+    json.置新值 (“title.text”, , 图表主标题)
 .如果真结束
 .如果真 (是否为空 (图表副标题) ＝ 假 且 删首尾空 (图表副标题) ≠ “”)
-    option ＝ 增改json (option, “title.subtext”, 图表副标题, , , , , )
+    json.置新值 (“title.subtext”, , 图表副标题)
 .如果真结束
-
-' 调试输出 (“a:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
-
 ' == 图例
-option ＝ 增改json (option, “legend.data”, , , , 创建json数组 (temp1, , ), , )
+json.置新值 (“legend.data”, , , , , 创建JSON数组 (临时文本数组))
 .如果真 (夜间模式)
-    option ＝ 增改json (option, “legend.inactiveColor”, “#777”, , , , , )
-    option ＝ 增改json (option, “legend.textStyle.color”, “#fff”, , , , , )
+    json.置新值 (“legend.inactiveColor”, , “#777”)
+    json.置新值 (“legend.textStyle.color”, , “#fff”)
 .如果真结束
 
-' 调试输出 (“b:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
-
-清除数组 (temp1)
+清除数组 (临时文本数组)
 .计次循环首 (取数组成员数 (数据组), 计数器1)
-    加入成员 (temp1, 数据组 [计数器1].日期)
+    加入成员 (临时文本数组, 数据组 [计数器1].日期)
 .计次循环尾 ()
-option ＝ 增改json (option, “xAxis.data”, , , , 创建json数组 (temp1, , ), , )
-' 调试输出 (“c:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
-
-' 调试输出 (“d:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
+json.置新值 (“xAxis.data”, , , , , 创建JSON数组 (临时文本数组))
 
 ' == 数据组
-清除数组 (temp1)
+清除数组 (临时文本数组)
 .计次循环首 (取数组成员数 (数据组), 计数器1)
-    清除数组 (temp3)
-    加入成员 (temp3, 数据组 [计数器1].开盘open)
-    加入成员 (temp3, 数据组 [计数器1].收盘close)
-    加入成员 (temp3, 数据组 [计数器1].最低lowest)
-    加入成员 (temp3, 数据组 [计数器1].最高highest)
-    加入成员 (temp1, 创建json数组 (, temp3, ))
+    清除数组 (临时小数数组)
+    加入成员 (临时小数数组, 数据组 [计数器1].开盘open)
+    加入成员 (临时小数数组, 数据组 [计数器1].收盘close)
+    加入成员 (临时小数数组, 数据组 [计数器1].最低lowest)
+    加入成员 (临时小数数组, 数据组 [计数器1].最高highest)
+    加入成员 (临时文本数组, 创建JSON数组 (, 临时小数数组))
 .计次循环尾 ()
-temp2 ＝ 增改json (“”, “data”, , , , 创建json数组 (temp1, , ), , )  ' ?????????
-' 调试输出 (“生成数据组:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
 
-重定义数组 (temp1, 假, 取数组成员数 (MA数组) ＋ 1)
-
-temp1 [1] ＝ 增改json (temp2, “name”, “日K”, , , , , )
-temp1 [1] ＝ 增改json (temp1 [1], “type”, “candlestick”, , , , , )
+json.数组_加入成员 (“series”, “{}”)
+json.置新值 (“series[0].data”, , , , , 创建JSON数组 (, , , 临时文本数组))
+json.置新值 (“series[0].name”, , “日K”)
+json.置新值 (“series[0].type”, , “candlestick”)
 .如果真 (夜间模式)
-    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.color”, “#FD1050”, , , , , )
-    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.color0”, “#0CF49B”, , , , , )
-    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.borderColor”, “#FD1050”, , , , , )
-    temp1 [1] ＝ 增改json (temp1 [1], “itemStyle.normal.borderColor0”, “#0CF49B”, , , , , )
+    json.置新值 (“series[0].itemStyle.normal.color”, , “#FD1050”)
+    json.置新值 (“series[0].itemStyle.normal.color0”, , “#0CF49B”)
+    json.置新值 (“series[0].itemStyle.normal.borderColor”, , “#FD1050”)
+    json.置新值 (“series[0].itemStyle.normal.borderColor0”, , “#0CF49B”)
 .如果真结束
 
-' 调试输出 (“e1:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
-
 .计次循环首 (取数组成员数 (MA数组), 计数器1)
-    temp2 ＝ “”
-    temp2 ＝ 增改json (temp2, “name”, “MA” ＋ 到文本 (MA数组 [计数器1]), , , , , )
-    temp2 ＝ 增改json (temp2, “type”, “line”, , , , , )
-    temp2 ＝ 增改json (temp2, “data”, , , , 计算价格均线MA (数据组, MA数组 [计数器1]), , )  ' ?????????
-    temp2 ＝ 增改json (temp2, “smooth”, , 真, , , , )
-    temp2 ＝ 增改json (temp2, “lineStyle.normal.opacity”, , , 0.5, , , )
-    加入成员 (temp1, temp2)
-    ' 调试输出 (“e2:”, 取启动时间 () － test_time)
-    ' test_time ＝ 取启动时间 ()
-
+    json.数组_加入成员 (“series”, “{}”)
+    计数器2 ＝ json.数组_取长度 (“series”) － 1  ' 数组下标是从0开始，所以需要减1
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].name”, , “MA” ＋ 到文本 (MA数组 [计数器1]))
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].type”, , “line”)
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].data”, , , , , 计算价格均线MA (数据组, MA数组 [计数器1]))
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].smooth”, , , , 真)
+    json.置新值 (“series[” ＋ 到文本 (计数器2) ＋ “].lineStyle.normal.opacity”, , , 0.5)
 .计次循环尾 ()
-' 调试输出 (创建json数组 (temp1, , ))
-' 调试输出 (“e3:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
 
-option ＝ 增改json (option, “series”, , , , 创建json数组 (temp1, , ), , )
-' 调试输出 (“f:”, 取启动时间 () － test_time)
-' test_time ＝ 取启动时间 ()
+返回 (json.取代码 ())
 
-
-返回 (option)
-
-
-.子程序 计算价格均线MA, 文本型
+.子程序 计算价格均线MA, 文本型, , 返回json格式数组
 .参数 数据组, K线数据格式, 数组
 .参数 天数, 整数型
 .局部变量 计数器1, 整数型
@@ -320,227 +265,9 @@ option ＝ 增改json (option, “series”, , , , 创建json数组 (temp1, , ),
     .计次循环尾 ()
     加入成员 (结果数组, 计数器3 ÷ 天数)
 .计次循环尾 ()
-临时文本 ＝ 创建json数组 (临时文本数组, , )
-临时文本 ＝ 取文本左边 (临时文本, 取文本长度 (临时文本) － 1) ＋ “,” ＋ 取文本右边 (创建json数组 (, 结果数组, ), 取文本长度 (创建json数组 (, 结果数组, )) － 1)
+临时文本 ＝ 创建JSON数组 (临时文本数组)
+临时文本 ＝ 取文本左边 (临时文本, 取文本长度 (临时文本) － 1) ＋ “,” ＋ 取文本右边 (创建JSON数组 (, 结果数组), 取文本长度 (创建JSON数组 (, 结果数组)) － 1)
 返回 (临时文本)
-
-.子程序 增改json, 文本型, 公开, 增加或修改json中的内容。
-.参数 原json, 文本型, 可空, json
-.参数 操作路径, 文本型, , 类似“a.b.c"，英文句点隔开
-.参数 文本值, 文本型, 可空, 多选一；...
-.参数 逻辑值, 逻辑型, 可空, 多选一；真/假
-.参数 数值, 双精度小数型, 可空, 多选一；数字
-.参数 数组内容, 文本型, 可空, 多选一；中括号“[ ]”，可用 创建json数组（） 生成。
-.参数 对象内容, 文本型, 可空, 多选一；大括号“{ }”，可用 增改json（） 生成
-.参数 空NULL, 整数型, 可空, 多选一；1 = null
-.局部变量 json, STJson
-.局部变量 root, STJsonValue
-.局部变量 path, STJsonValue, , "0"
-.局部变量 resule, STJsonParseResult
-.局部变量 路径, 文本型, , "0"
-.局部变量 i, 整数型
-.局部变量 位置, 整数型
-.局部变量 是否存在, 逻辑型
-.局部变量 数组json, STJsonValue
-.局部变量 对象json, STJsonValue
-
-' 调试输出 (“path = ”, 操作路径, 文本值, 逻辑值)
-.判断开始 (是否为空 (数组内容) ＝ 假)
-    数组json ＝ json.Parse (数组内容, resule)
-    .如果真 (resule.stat ＝ 假)
-        信息框 (“函数：增改json（）” ＋ #换行符 ＋ “参数：数组内容，参数内容无效。”, 0, , )
-        返回 (“”)
-    .如果真结束
-
-.判断 (是否为空 (对象内容) ＝ 假)
-    对象json ＝ json.Parse (对象内容, resule)
-    .如果真 (resule.stat ＝ 假)
-        信息框 (“函数：增改json（）” ＋ #换行符 ＋ “参数：对象内容，参数内容无效。”, 0, , )
-        返回 (“”)
-    .如果真结束
-
-.默认
-
-.判断结束
-root ＝ json.Parse (原json, resule)
-路径 ＝ 分割文本 (操作路径, “.”, )
-.如果真 (取数组成员数 (路径) ＝ 0)
-    返回 (原json)
-.如果真结束
-重定义数组 (path, 假, 取数组成员数 (路径))
-是否存在 ＝ 真
-path [1] ＝ root.Get (路径 [1])
-.如果真 (path [1].IsNull () ＝ 假)  ' 判断第一级是否存在，=假为已存在
-    位置 ＝ 1
-    .变量循环首 (2, 取数组成员数 (路径), 1, i)  ' 从第二级开始，将已经存在的数据分级保存到数组中，如果有某一级不存在，则跳出（i为路径的级别，例如：hello.world，world为第2级）
-        path [i] ＝ path [i － 1].Get (路径 [i])
-        .如果真 (path [i].IsNull ())
-            位置 ＝ i － 1
-            是否存在 ＝ 假
-            跳出循环 ()
-        .如果真结束
-
-    .变量循环尾 ()
-    .如果真 (是否存在)  ' 所有路径都存在，此处修改现有数据
-        ' 调试输出 (取数组成员数 (path), i, json.ToJsonString (path [1], , , ))
-
-        .如果 (i ＝ 2)
-            .判断开始 (是否为空 (文本值) ＝ 假)
-                root.Put (路径 [1], json.CreateStringValue (文本值))
-            .判断 (是否为空 (逻辑值) ＝ 假)
-                root.Put (路径 [1], json.CreateBoolValue (逻辑值))
-            .判断 (是否为空 (数值) ＝ 假)
-                root.Put (路径 [1], json.CreateDoubleValue (数值))
-            .判断 (是否为空 (数组内容) ＝ 假)
-                root.Put (路径 [1], 数组json)
-            .判断 (是否为空 (对象内容) ＝ 假)
-                root.Put (路径 [1], 对象json)
-            .判断 (是否为空 (空NULL) ＝ 假)
-                root.Put (路径 [1], json.CreateNullValue ())
-            .默认
-
-            .判断结束
-
-        .否则
-            .判断开始 (是否为空 (文本值) ＝ 假)
-                path [i － 2].Put (路径 [i － 1], json.CreateStringValue (文本值))
-            .判断 (是否为空 (逻辑值) ＝ 假)
-                path [i － 2].Put (路径 [i － 1], json.CreateBoolValue (逻辑值))
-            .判断 (是否为空 (数值) ＝ 假)
-                path [i － 2].Put (路径 [i － 1], json.CreateDoubleValue (数值))
-                path [1].SetDouble (数值)
-            .判断 (是否为空 (数组内容) ＝ 假)
-                path [i － 2].Put (路径 [i － 1], 数组json)
-            .判断 (是否为空 (对象内容) ＝ 假)
-                path [i － 2].Put (路径 [i － 1], 对象json)
-            .判断 (是否为空 (空NULL) ＝ 假)
-                path [i － 2].Put (路径 [i － 1], json.CreateNullValue ())
-            .默认
-
-            .判断结束
-
-            .变量循环首 (i － 3, 1, -1, i)  ' 循环将修改好的数据一级一级还原回去
-                path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
-            .变量循环尾 ()
-            root.Put (路径 [1], path [1])
-        .如果结束
-
-        返回 (json.ToJsonString (root))
-    .如果真结束
-
-.如果真结束
-
-' 测试用
-.' 计次循环首 (取数组成员数 (path), i)
-    ' 输出调试文本 (“当前：” ＋ 到文本 (i) ＋ “，总数：” ＋ 到文本 (取数组成员数 (path)) ＋ #换行符 ＋ #换行符 ＋ json.ToJsonString (path [i], , , ))
-.' 计次循环尾 ()
-
-' 路径中第一级或者其中某一级不存在，在此处开始创建
-.如果 (取数组成员数 (路径) ＝ 2)
-    .判断开始 (是否为空 (文本值) ＝ 假)
-        path [1].Put (路径 [2], json.CreateStringValue (文本值))
-    .判断 (是否为空 (逻辑值) ＝ 假)
-        path [1].Put (路径 [2], json.CreateBoolValue (逻辑值))
-    .判断 (是否为空 (数值) ＝ 假)
-        path [1].Put (路径 [2], json.CreateDoubleValue (数值))
-    .判断 (是否为空 (数组内容) ＝ 假)
-        path [1].Put (路径 [2], 数组json)
-    .判断 (是否为空 (对象内容) ＝ 假)
-        path [1].Put (路径 [2], 对象json)
-    .判断 (是否为空 (空NULL) ＝ 假)
-        path [1].Put (路径 [2], json.CreateNullValue ())
-    .默认
-
-    .判断结束
-
-    root.Put (路径 [1], path [1])
-
-.否则
-    位置 ＝ 取数组成员数 (路径)
-    .如果 (位置 ＝ 1)
-        .判断开始 (是否为空 (文本值) ＝ 假)
-            root.Put (路径 [1], json.CreateStringValue (文本值))
-        .判断 (是否为空 (逻辑值) ＝ 假)
-            root.Put (路径 [1], json.CreateBoolValue (逻辑值))
-        .判断 (是否为空 (数值) ＝ 假)
-            root.Put (路径 [1], json.CreateDoubleValue (数值))
-        .判断 (是否为空 (数组内容) ＝ 假)
-            root.Put (路径 [1], 数组json)
-        .判断 (是否为空 (对象内容) ＝ 假)
-            root.Put (路径 [1], 对象json)
-        .判断 (是否为空 (空NULL) ＝ 假)
-            root.Put (路径 [1], json.CreateNullValue ())
-        .默认
-
-        .判断结束
-
-    .否则
-        .判断开始 (是否为空 (文本值) ＝ 假)
-            path [位置 － 1].Put (路径 [位置], json.CreateStringValue (文本值))
-        .判断 (是否为空 (逻辑值) ＝ 假)
-            path [位置 － 1].Put (路径 [位置], json.CreateBoolValue (逻辑值))
-        .判断 (是否为空 (数值) ＝ 假)
-            path [位置 － 1].Put (路径 [位置], json.CreateDoubleValue (数值))
-        .判断 (是否为空 (数组内容) ＝ 假)
-            path [位置 － 1].Put (路径 [位置], 数组json)
-        .判断 (是否为空 (对象内容) ＝ 假)
-            path [位置 － 1].Put (路径 [位置], 对象json)
-        .判断 (是否为空 (空NULL) ＝ 假)
-            path [位置 － 1].Put (路径 [位置], json.CreateNullValue ())
-        .默认
-
-        .判断结束
-
-        ' 测试用
-        .' 计次循环首 (取数组成员数 (path), i)
-            ' 输出调试文本 (“当前：” ＋ 到文本 (i) ＋ “，总数：” ＋ 到文本 (取数组成员数 (path)) ＋ #换行符 ＋ #换行符 ＋ json.ToJsonString (path [i], , , ))
-        .' 计次循环尾 ()
-
-        path [位置 － 2].Put (路径 [位置 － 1], path [位置 － 1])
-        .变量循环首 (位置 － 3, 1, -1, i)
-            path [i].Put (路径 [i ＋ 1], path [i ＋ 1])
-        .变量循环尾 ()
-        root.Put (路径 [1], path [1])
-
-    .如果结束
-
-.如果结束
-
-返回 (json.ToJsonString (root))
-
-.子程序 创建json数组, 文本型, 公开
-.参数 文本数组, 文本型, 可空 数组
-.参数 小数数组, 双精度小数型, 可空 数组
-.参数 整数数组, 整数型, 可空 数组
-.局部变量 json, STJson
-.局部变量 temp, STJsonValue
-.局部变量 temp1, STJsonValue
-.局部变量 jsonr, STJsonParseResult
-.局部变量 i, 整数型
-
-.判断开始 (是否为空 (文本数组) ＝ 假)
-    .计次循环首 (取数组成员数 (文本数组), i)
-        temp1 ＝ json.Parse (文本数组 [i], jsonr)
-        .如果 (jsonr.stat ＝ 真)
-            temp.Add (temp1)
-        .否则
-            temp.Add (json.CreateStringValue (文本数组 [i]))
-        .如果结束
-
-    .计次循环尾 ()
-.判断 (是否为空 (小数数组) ＝ 假)
-    .计次循环首 (取数组成员数 (小数数组), i)
-        temp.Add (json.CreateDoubleValue (小数数组 [i]))
-    .计次循环尾 ()
-.判断 (是否为空 (整数数组) ＝ 假)
-    .计次循环首 (取数组成员数 (整数数组), i)
-        temp.Add (json.CreateLongValue (整数数组 [i]))
-    .计次循环尾 ()
-.默认
-
-.判断结束
-返回 (json.ToJsonString (temp, , , ))
-
 
 .子程序 关闭loading动画, , 公开, 关闭指定图形的Loading动画。
 .参数 浏览框, 超文本浏览框
@@ -567,3 +294,52 @@ path [1] ＝ root.Get (路径 [1])
 .如果结束
 
 
+
+.子程序 创建JSON数组, 文本型, 公开, 仅返回格式化后的数组内容带中括号：“[ ]”
+.参数 文本数组, 文本型, 可空 数组
+.参数 小数数组, 双精度小数型, 可空 数组
+.参数 整数数组, 整数型, 可空 数组
+.参数 强制文本数组, 文本型, 可空 数组, 已经将数值型数组转换为文本数组的（内容已经加过双引号的）请使用这里，例如：Y轴数据类型里的数据组。
+.局部变量 计数器, 整数型
+.局部变量 最终结果, 文本型
+
+.判断开始 (是否为空 (文本数组) ＝ 假)
+    .计次循环首 (取数组成员数 (文本数组), 计数器)
+        .如果 (计数器 ＝ 1)
+            最终结果 ＝ #引号 ＋ 文本数组 [计数器] ＋ #引号
+        .否则
+            最终结果 ＝ 最终结果 ＋ “,” ＋ #引号 ＋ 文本数组 [计数器] ＋ #引号
+        .如果结束
+
+    .计次循环尾 ()
+.判断 (是否为空 (整数数组) ＝ 假)
+    .计次循环首 (取数组成员数 (整数数组), 计数器)
+        .如果 (计数器 ＝ 1)
+            最终结果 ＝ 到文本 (整数数组 [计数器])
+        .否则
+            最终结果 ＝ 最终结果 ＋ “,” ＋ 到文本 (整数数组 [计数器])
+        .如果结束
+
+    .计次循环尾 ()
+.判断 (是否为空 (小数数组) ＝ 假)
+    .计次循环首 (取数组成员数 (小数数组), 计数器)
+        .如果 (计数器 ＝ 1)
+            最终结果 ＝ 到文本 (小数数组 [计数器])
+        .否则
+            最终结果 ＝ 最终结果 ＋ “,” ＋ 到文本 (小数数组 [计数器])
+        .如果结束
+
+    .计次循环尾 ()
+.判断 (是否为空 (强制文本数组) ＝ 假)
+    .计次循环首 (取数组成员数 (强制文本数组), 计数器)
+        .如果 (计数器 ＝ 1)
+            最终结果 ＝ 强制文本数组 [计数器]
+        .否则
+            最终结果 ＝ 最终结果 ＋ “,” ＋ 强制文本数组 [计数器]
+        .如果结束
+
+    .计次循环尾 ()
+.默认
+
+.判断结束
+返回 (“[” ＋ 最终结果 ＋ “]”)
