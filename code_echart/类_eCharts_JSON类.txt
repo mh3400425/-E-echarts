@@ -254,7 +254,7 @@ Script.方法 (“Eval”, “ary=null”)  ' 清除数组对象
 .判断 (是否为空 (value_文本型) ＝ 假)
     Script.方法 (“Eval”, 对象名称 ＋ “=” ＋ #引号 ＋ value_文本型 ＋ #引号)
 .判断 (是否为空 (value_数组) ＝ 假)
-    Script.方法 (“Eval”, 对象名称 ＋ “=” ＋ value_数组)
+    Script.方法 (“Eval”, 对象名称 ＋ “=[” ＋ value_数组 ＋ “]”)
 .判断 (是否为空 (value_对象) ＝ 假)
     Script.方法 (“Eval”, 对象名称 ＋ “=” ＋ value_对象)
 .判断 (是否为空 (value_NULL) ＝ 假)
