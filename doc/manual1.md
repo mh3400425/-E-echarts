@@ -34,7 +34,7 @@
 
 ##仪表盘
 ![仪表盘](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/yibiaopan-tu.png)
-![仪表盘](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/yibiaopan.png)
+![仪表盘](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/yibiapan.png)
 
 ***
 # 参数说明
@@ -53,7 +53,7 @@
 ### X轴组件
 ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/b-X.png)
 ### Y轴组件
-![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/b-Y.png)
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/b-y.png)
 ### 标题组件
 ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/b-biaoti.png)
 ### 图例组件

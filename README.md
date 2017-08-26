@@ -3,6 +3,7 @@
 ***
 ## 目录
 * [模块简介](#jianjie)
+* [运行效果](#demo)
 * [模块特点](#tedian)
 * [最新版功能（v1.4）](#zuixin)
 * [运行环境](#huanjing)
@@ -15,6 +16,28 @@
 
 官方图形样例展示：http://echarts.baidu.com/examples.html  
 官方API文档：http://echarts.baidu.com/option.html  
+
+官方示例
+![官方示例](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/demo1.png)
+
+网友示例
+![网友示例](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/demo2.png)
+#####[回到顶部](#top)
+***
+### 模块运行效果： {#demo}
+
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhexianhesandiantu-tu.png)
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhutu-tu.png)
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/bingtu-tu1.png)
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/bingtu-tu2.png)
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/leidatu-tu.png)
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/demo3.png)
+
+动态效果展示（gif动图稍慢）
+动态数据图形
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/demo5.gif)
+K线图
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/demo4.gif)
 
 #####[回到顶部](#top)
 ***
@@ -39,8 +62,15 @@
 因此1.4版模块中完全使用内置json类封装了一些常用图形和组件的快速生成及操作方法，具体移步下边链接查看。
 >注意：虽然模块内置封装了一些图形的快速生成及操作方法，但是还是建议大家自己查阅官方api根据自己需求来拼写配置json，编写方法推荐使用模块内置的json类（支持链式属性编辑）  
 
-* [使用模块内置json类编写配置json方法]()
-* [1.4版本新加入的图形快速生成方法示例]()
+* [使用模块内置json类编写配置json方法](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual0.md)
+* [1.4版本新加入的图形快速生成方法示例](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual1.md)
+
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhutu-tu.png)
+
+内置json类方法（稍复杂，但对照官方api自由定制性强）
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhutu-yuanfangfa.png)
+1.4的快速方法
+![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhutu.png)
 
 #####[回到顶部](#top)
 ***
