@@ -58,16 +58,18 @@ K线图
 #####[回到顶部](#top)
 ***
 ### 1.4版最新功能： {#zuixin}
+* 快速生成图形（[1.4版本新加入的图形快速生成方法示例](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual1.md)）  
+* 支持颜色主题切换（[v1.4.1 更新内置6套官方主题，并且支持官方在线主题构建代码的导入，点击查看主题代码导入方法](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual2.md)）  
+
 由于echart功能过于强大，导致配置json编写比较复杂，很多新手看到复杂的json编写已经望而止步。
 因此1.4版模块中完全使用内置json类封装了一些常用图形和组件的快速生成及操作方法，具体移步下边链接查看。
 >注意：虽然模块内置封装了一些图形的快速生成及操作方法，但是还是建议大家自己查阅官方api根据自己需求来拼写配置json，编写方法推荐使用模块内置的json类（支持链式属性编辑）  
 
-* [使用模块内置json类编写配置json方法](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual0.md)
-* [1.4版本新加入的图形快速生成方法示例](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual1.md)
+
 
 ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhutu-tu.png)
 
-内置json类方法（稍复杂，但对照官方api自由定制性强）
+内置json类方法（[稍复杂，但对照官方api自由定制性强，点击查看使用模块内置json类编写配置json方法](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual0.md)）
 ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhutu-yuanfangfa.png)
 1.4的快速方法
 ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/zhutu.png)
