@@ -1,5 +1,19 @@
 .版本 2
 
+.常量 Eval, "<文本长度: 1129>", , 解密经过eval加密的js内容
+.常量 JS清晰化, "<文本长度: 9454>"
+.常量 MD5加密脚本, "<文本长度: 6422>"
+.常量 URL编码, "<文本长度: 51>", , 编码函数 encodeURIComponent()：将非字母、数字 字符转换成ASCII码，以16进制表示
+.常量 URL解码, "<文本长度: 51>", , 译码函数 decodeURIComponent()：将被encodeURIComponent()编码过的ASCII码转换成对应的字符
+.常量 Js2, "<文本长度: 18994>", , https://github.com/douglascrockford/JSON-js/blob/master/json2.js
+.常量 JsKeysWords, "<文本长度: 170>", , JavaScript脚本中的关键字
+.常量 JsReservedWords, "<文本长度: 256>", , JavaScript脚本中的保留字 
+.常量 JsFormat, "<文本长度: 2051>"
+.常量 Type_String, "0"
+.常量 Type_Bool, "1"
+.常量 Type_Null, "2"
+.常量 Type_Obj, "3"
+.常量 Type_Int, "5"
 .常量 HTML_页面初始框架, "<文本长度: 259>"
 .常量 HTML_折线图, "<文本长度: 376>"
 .常量 CSS_隐藏滚动条, "<文本长度: 51>", 公开

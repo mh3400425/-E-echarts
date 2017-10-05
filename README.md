@@ -3,6 +3,7 @@
 ***
 ## 目录
 * [模块简介](#jianjie)
+* [更新日志](https://coding.net/u/lsy9202/p/E-echarts/git/blob/master/doc/manual3.md)
 * [运行效果](#demo)
 * [模块特点](#tedian)
 * [最新版功能（v1.4）](#zuixin)

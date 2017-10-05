@@ -809,7 +809,7 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到�
     .计次循环首 (取数组成员数 (刻度盘分段颜色), 计数器)
         temp.数组_加入成员 (“”, “[” ＋ 到文本 (刻度盘分段颜色 [计数器].分段位置 ÷ 100) ＋ “,'” ＋ 刻度盘分段颜色 [计数器].颜色 ＋ “']”)
     .计次循环尾 ()
-    json.置新值 (“series[0].axisLine.lineStyle.color”, temp.取代码 ())
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].axisLine.lineStyle.color”, temp.取代码 ())
 .如果真结束
 
 

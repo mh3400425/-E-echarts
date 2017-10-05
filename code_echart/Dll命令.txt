@@ -33,3 +33,8 @@
     .参数 cchMultiByte, 整数型
     .参数 lpDefaultChar, 整数型
     .参数 lpUsedDefaultChar, 逻辑型
+
+.DLL命令 CoInitialize, 整数型, "ole32.dll", "CoInitialize", 公开, HRESULT WINAPI CoInitialize
+    .参数 pvReserved, 整数型, , _In_opt_ LPVOID pvReserved,
+
+.DLL命令 CoUninitialize, , "ole32.dll", "CoUninitialize", 公开, void WINAPI CoUninitialize
