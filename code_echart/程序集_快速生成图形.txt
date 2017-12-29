@@ -48,12 +48,17 @@
         .如果 (是否为空 (图例数据))
             清除数组 (名称组)
             .计次循环首 (json.数组_取长度 (“series”), 计数器1)
-                .判断开始 (json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].type”) ＝ “radar”)
+                .判断开始 (json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].type”) ＝ “graph”)
+                    .计次循环首 (json.数组_取长度 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].categories”), 计数器2)
+                        加入成员 (名称组, json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].categories[” ＋ 到文本 (计数器2 － 1) ＋ “].name”))
+                    .计次循环尾 ()
+                .判断 (json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].type”) ＝ “radar”)
                     .计次循环首 (json.数组_取长度 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].data”), 计数器2)
                         加入成员 (名称组, json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].data[” ＋ 到文本 (计数器2 － 1) ＋ “].name”))
                     .计次循环尾 ()
-                .默认
                     加入成员 (名称组, json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].name”))
+                .默认
+
                 .判断结束
 
             .计次循环尾 ()
@@ -73,12 +78,17 @@
     .如果 (是否为空 (图例数据))
         清除数组 (名称组)
         .计次循环首 (json.数组_取长度 (“series”), 计数器1)
-            .判断开始 (json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].type”) ＝ “radar”)
+            .判断开始 (json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].type”) ＝ “graph”)
+                .计次循环首 (json.数组_取长度 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].categories”), 计数器2)
+                    加入成员 (名称组, json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].categories[” ＋ 到文本 (计数器2 － 1) ＋ “].name”))
+                .计次循环尾 ()
+            .判断 (json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].type”) ＝ “radar”)
                 .计次循环首 (json.数组_取长度 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].data”), 计数器2)
                     加入成员 (名称组, json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].data[” ＋ 到文本 (计数器2 － 1) ＋ “].name”))
                 .计次循环尾 ()
-            .默认
                 加入成员 (名称组, json.取文本 (“series[” ＋ 到文本 (计数器1 － 1) ＋ “].name”))
+            .默认
+
             .判断结束
 
         .计次循环尾 ()
@@ -860,3 +870,183 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, temp.取�
     json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].smooth”, , , , 真)
     json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].lineStyle.normal.opacity”, , , 0.5)
 .计次循环尾 ()
+
+.子程序 添加图形数据_词云图, , 公开, 添加词云图。
+.参数 json, eCharts_JSON类, 参考
+.参数 词条名称组, 文本型, 数组, 名称组内容与数据组必须一一对应。
+.参数 词条数据组, 整数型, 数组, 名称组内容与数据组必须一一对应。
+.参数 词条随机颜色, 逻辑型, 可空, 可空，默认开启。
+.参数 词条阴影, 逻辑型, 可空, 可空，默认开启
+.参数 词条间隔大小, 整数型, 可空, 可空，默认20。
+.参数 词条尺寸范围_最小, 整数型, 可空, 可空，默认12。词条随机尺寸的范围最小值。
+.参数 词条尺寸范围_最大, 整数型, 可空, 可空，默认50。词条随机尺寸的范围最大值。
+.参数 词条旋转角度范围_最小, 整数型, 可空, 可空，默认0（不旋转）。词条随机旋转角度的范围最小值。
+.参数 词条旋转角度范围_最大, 整数型, 可空, 可空，默认0（不旋转）。词条随机旋转角度的范围最大值。
+.局部变量 i, 整数型
+.局部变量 次数, 整数型
+.局部变量 temp_json, eCharts_JSON类
+
+json.解析 ()
+json.置新值 (“series[0].type”, , “wordCloud”)
+.如果 (是否为空 (词条间隔大小))
+    json.置新值 (“series[0].gridSize”, , , 20)
+.否则
+    json.置新值 (“series[0].gridSize”, , , 词条间隔大小)
+.如果结束
+.如果 (是否为空 (词条尺寸范围_最小))
+    json.置新值 (“series[0].sizeRange[0]”, , , 12)
+.否则
+    json.置新值 (“series[0].sizeRange[0]”, , , 词条尺寸范围_最小)
+.如果结束
+.如果 (是否为空 (词条尺寸范围_最大))
+    json.置新值 (“series[0].sizeRange[1]”, , , 50)
+.否则
+    json.置新值 (“series[0].sizeRange[1]”, , , 词条尺寸范围_最大)
+.如果结束
+.如果 (是否为空 (词条旋转角度范围_最小))
+    json.置新值 (“series[0].rotationRange[0]”, , , 0)
+.否则
+    json.置新值 (“series[0].rotationRange[0]”, , , 词条旋转角度范围_最小)
+.如果结束
+.如果 (是否为空 (词条旋转角度范围_最大))
+    json.置新值 (“series[0].rotationRange[1]”, , , 0)
+.否则
+    json.置新值 (“series[0].rotationRange[1]”, , , 词条旋转角度范围_最大)
+.如果结束
+.如果 (取数组成员数 (词条数据组) ＜ 取数组成员数 (词条名称组))
+    次数 ＝ 取数组成员数 (词条数据组)
+.否则
+    次数 ＝ 取数组成员数 (词条名称组)
+.如果结束
+.如果真 (是否为空 (词条阴影) 或 词条阴影)
+    json.置新值 (“series[0].textStyle.emphasis.shadowBlur”, , , 10)
+    json.置新值 (“series[0].textStyle.emphasis.shadowColor”, , “#333”)
+.如果真结束
+置随机数种子 (取小时 (取现行时间 ()) × 取秒 (取现行时间 ()))
+.计次循环首 (次数, i)
+    temp_json.解析 ()
+    temp_json.置新值 (“name”, , 词条名称组 [i])
+    temp_json.置新值 (“value”, , , 词条数据组 [i])
+    temp_json.置新值 (“textStyle.emphasis.color”, , “red”)
+    .如果真 (是否为空 (词条随机颜色) 或 词条随机颜色)
+        temp_json.置新值 (“textStyle.normal.color”, , “rgb(” ＋ 到文本 (取随机数 (0, 255)) ＋ “,” ＋ 到文本 (取随机数 (0, 255)) ＋ “,” ＋ 到文本 (取随机数 (0, 255)) ＋ “)”)
+    .如果真结束
+    json.数组_加入成员 (“series[0].data”, temp_json.取代码 ())
+.计次循环尾 ()
+
+
+.子程序 添加图形数据_关系图, , 公开, 添加关系图。
+.参数 json, eCharts_JSON类, 参考
+.参数 关系节点组, 关系节点, 数组
+.参数 对应关系组, 对应关系, 数组
+.局部变量 分类组, 文本型, , "0"
+.局部变量 分类编号, 文本型, , "0"
+.局部变量 计数器1, 整数型
+.局部变量 计数器2, 整数型
+.局部变量 是否存在, 逻辑型
+
+json.解析 ()
+json.置新值 (“series”, “[]”)
+json.置新值 (“series[0].type”, , “graph”)
+json.置新值 (“series[0].layout”, , “force”)
+json.置新值 (“series[0].symbolSize”, , , 45)
+json.置新值 (“series[0].focusNodeAdjacency”, , , , 真)
+json.置新值 (“series[0].roam”, , , , 真)
+json.置新值 (“series[0].draggable”, , , , 真)
+json.置新值 (“series[0].label.normal.show”, , , , 真)
+json.置新值 (“series[0].label.normal.textStyle.fontSize”, , , 12)
+json.置新值 (“series[0].force.repulsion”, , , 1000)
+json.置新值 (“series[0].edgeSymbolSize[0]”, , , 4)
+json.置新值 (“series[0].edgeSymbolSize[1]”, , , 50)
+json.置新值 (“series[0].edgeLabel.normal.show”, , , , 真)
+json.置新值 (“series[0].edgeLabel.normal.textStyle.fontSize”, , , 10)
+json.置新值 (“series[0].edgeLabel.normal.formatter”, , “{c}”)
+json.置新值 (“series[0].lineStyle.normal.opacity”, , , 0.9)
+json.置新值 (“series[0].lineStyle.normal.width”, , , 1)
+json.置新值 (“series[0].lineStyle.normal.curveness”, , , 0)
+.计次循环首 (取数组成员数 (关系节点组), 计数器1)
+    是否存在 ＝ 假
+    .计次循环首 (取数组成员数 (分类组), 计数器2)
+        .如果真 (分类组 [计数器2] ＝ 关系节点组 [计数器1].节点名称)
+            是否存在 ＝ 真
+        .如果真结束
+
+    .计次循环尾 ()
+    .如果真 (是否存在 ＝ 假)
+        加入成员 (分类组, 关系节点组 [计数器1].节点名称)
+    .如果真结束
+
+.计次循环尾 ()
+.计次循环首 (取数组成员数 (分类组), 计数器1)
+    json.置新值 (“series[0].categories[” ＋ 到文本 (计数器1 － 1) ＋ “].name”, , 分类组 [计数器1])
+.计次循环尾 ()
+.计次循环首 (取数组成员数 (关系节点组), 计数器1)
+    json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].name”, , 关系节点组 [计数器1].节点名称)
+    .如果真 (关系节点组 [计数器1].节点数值 ≠ “”)
+        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].value”, , , 到数值 (关系节点组 [计数器1].节点名称))
+    .如果真结束
+    .如果真 (关系节点组 [计数器1].节点样式 ≠ “”)
+        .判断开始 (关系节点组 [计数器1].节点样式 ＝ “1”)
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “circle”)
+        .判断 (关系节点组 [计数器1].节点样式 ＝ “2”)
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “rect”)
+        .判断 (关系节点组 [计数器1].节点样式 ＝ “3”)
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “roundRect”)
+        .判断 (关系节点组 [计数器1].节点样式 ＝ “4”)
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “triangle”)
+        .判断 (关系节点组 [计数器1].节点样式 ＝ “5”)
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “diamond”)
+        .判断 (关系节点组 [计数器1].节点样式 ＝ “6”)
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “pin”)
+        .判断 (关系节点组 [计数器1].节点样式 ＝ “7”)
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “arrow”)
+        .默认
+            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , 关系节点组 [计数器1].节点样式)
+        .判断结束
+
+    .如果真结束
+    .如果 (关系节点组 [计数器1].节点图标大小 ＝ “”)
+        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbolSize”, , , 50)
+    .否则
+        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbolSize”, , , 到数值 (关系节点组 [计数器1].节点图标大小))
+    .如果结束
+    .如果真 (关系节点组 [计数器1].节点是否固定 ＝ “1”)
+        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].fixed”, , , , 真)
+    .如果真结束
+    .计次循环首 (取数组成员数 (分类组), 计数器2)
+        .如果真 (分类组 [计数器2] ＝ 关系节点组 [计数器1].节点名称)
+            跳出循环 ()
+        .如果真结束
+
+    .计次循环尾 ()
+    json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].category”, , , 计数器2 － 1)
+.计次循环尾 ()
+.计次循环首 (取数组成员数 (对应关系组), 计数器1)
+    json.置新值 (“series[0].links[” ＋ 到文本 (计数器1 － 1) ＋ “].value”, , 对应关系组 [计数器1].关系名称)
+    json.置新值 (“series[0].links[” ＋ 到文本 (计数器1 － 1) ＋ “].source”, , , 对应关系组 [计数器1].关系节点成员编号1 － 1)
+    json.置新值 (“series[0].links[” ＋ 到文本 (计数器1 － 1) ＋ “].target”, , , 对应关系组 [计数器1].关系节点成员编号2 － 1)
+.计次循环尾 ()
+
+.子程序 添加图形数据_树图, , 公开, 添加树图。
+.参数 json, eCharts_JSON类, 参考
+.参数 树图json, eCharts_JSON类, , 数据json必须照固定格式，格式请参考示例。
+
+json.解析 (“{}”)
+json.置新值 (“series[0].type”, , “tree”)
+json.置新值 (“series[0].data”, “[” ＋ 树图json.取代码 () ＋ “]”)  ' 数据json必须照固定格式
+json.置新值 (“series[0].top”, , “1%”)
+json.置新值 (“series[0].left”, , “7%”)
+json.置新值 (“series[0].bottom”, , “1%”)
+json.置新值 (“series[0].right”, , “20%”)
+json.置新值 (“series[0].symbolSize”, , , 7)
+json.置新值 (“series[0].label.normal.position”, , “left”)
+json.置新值 (“series[0].label.normal.verticalAlign”, , “middle”)
+json.置新值 (“series[0].label.normal.align”, , “right”)
+json.置新值 (“series[0].label.normal.fontSize”, , , 9)
+json.置新值 (“series[0].leaves.label.normal.position”, , “right”)
+json.置新值 (“series[0].leaves.label.normal.verticalAlign”, , “middle”)
+json.置新值 (“series[0].leaves.label.normal.align”, , “left”)
+json.置新值 (“series[0].expandAndCollapse”, , , , 真)
+json.置新值 (“series[0].animationDuration”, , , 550)
+json.置新值 (“series[0].animationDurationUpdate”, , , 750)
+
