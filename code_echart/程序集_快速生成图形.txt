@@ -1030,23 +1030,76 @@ json.置新值 (“series[0].lineStyle.normal.curveness”, , , 0)
 .子程序 添加图形数据_树图, , 公开, 添加树图。
 .参数 json, eCharts_JSON类, 参考
 .参数 树图json, eCharts_JSON类, , 数据json必须照固定格式，格式请参考示例。
+.参数 展开方向, 整数型, 可空, 默认为0（水平右侧展开），1=垂直下方展开
+.参数 标记图形类型, 文本型, 可空, 默认为"0"=空心圆，"1"=圆形，"2"=矩形，"3"=圆角矩形，"4"=三角形，"5"=菱形，"6"=大头针，"7"=箭头，同时支持"image://url"指定图片或者"path://"指定矢量图形。
+.参数 标记图形大小, 整数型, 可空, 默认=7
+.参数 初始展开层级, 整数型, 可空, 默认=2，默认只有前2层展开，以后的默认是折叠状态
+.参数 顶部留空距离, 整数型, 可空, 百分比，默认为12%
+.参数 底部留空距离, 整数型, 可空, 百分比，默认为12%
+.参数 左侧留空距离, 整数型, 可空, 百分比，默认为12%
+.参数 右侧留空距离, 整数型, 可空, 百分比，默认为12%
 
 json.解析 (“{}”)
 json.置新值 (“series[0].type”, , “tree”)
 json.置新值 (“series[0].data”, “[” ＋ 树图json.取代码 () ＋ “]”)  ' 数据json必须照固定格式
-json.置新值 (“series[0].top”, , “1%”)
-json.置新值 (“series[0].left”, , “7%”)
-json.置新值 (“series[0].bottom”, , “1%”)
-json.置新值 (“series[0].right”, , “20%”)
-json.置新值 (“series[0].symbolSize”, , , 7)
-json.置新值 (“series[0].label.normal.position”, , “left”)
-json.置新值 (“series[0].label.normal.verticalAlign”, , “middle”)
-json.置新值 (“series[0].label.normal.align”, , “right”)
-json.置新值 (“series[0].label.normal.fontSize”, , , 9)
-json.置新值 (“series[0].leaves.label.normal.position”, , “right”)
-json.置新值 (“series[0].leaves.label.normal.verticalAlign”, , “middle”)
-json.置新值 (“series[0].leaves.label.normal.align”, , “left”)
 json.置新值 (“series[0].expandAndCollapse”, , , , 真)
 json.置新值 (“series[0].animationDuration”, , , 550)
 json.置新值 (“series[0].animationDurationUpdate”, , , 750)
+.如果 (是否为空 (初始展开层级))
+    json.置新值 (“series[0].initialTreeDepth”, , , 2)
+.否则
+    json.置新值 (“series[0].initialTreeDepth”, , , 初始展开层级)
+.如果结束
+.如果 (是否为空 (展开方向) 或 展开方向 ＝ 0)
+    json.置新值 (“series[0].orient”, , “horizontal”)
+.否则
+    json.置新值 (“series[0].orient”, , “vertical”)
+.如果结束
+.判断开始 (是否为空 (标记图形类型))
+    json.置新值 (“series[0].symbol”, , “emptyCircle”)
+.判断 (标记图形类型 ＝ “0”)
+    json.置新值 (“series[0].symbol”, , “emptyCircle”)
+.判断 (标记图形类型 ＝ “1”)
+    json.置新值 (“series[0].symbol”, , “circle”)
+.判断 (标记图形类型 ＝ “2”)
+    json.置新值 (“series[0].symbol”, , “rect”)
+.判断 (标记图形类型 ＝ “3”)
+    json.置新值 (“series[0].symbol”, , “roundRect”)
+.判断 (标记图形类型 ＝ “4”)
+    json.置新值 (“series[0].symbol”, , “triangle”)
+.判断 (标记图形类型 ＝ “5”)
+    json.置新值 (“series[0].symbol”, , “diamond”)
+.判断 (标记图形类型 ＝ “6”)
+    json.置新值 (“series[0].symbol”, , “pin”)
+.判断 (标记图形类型 ＝ “7”)
+    json.置新值 (“series[0].symbol”, , “arrow”)
+.默认
+    json.置新值 (“series[0].symbol”, , 标记图形类型)
+.判断结束
+.如果 (是否为空 (标记图形大小))
+    json.置新值 (“series[0].symbolSize”, , , 7)
+.否则
+    json.置新值 (“series[0].symbolSize”, , , 标记图形大小)
+.如果结束
+.如果 (是否为空 (顶部留空距离))
+    json.置新值 (“series[0].top”, , “12%”)
+.否则
+    json.置新值 (“series[0].top”, , 到文本 (顶部留空距离) ＋ “%”)
+.如果结束
+.如果 (是否为空 (底部留空距离))
+    json.置新值 (“series[0].bottom”, , “12%”)
+.否则
+    json.置新值 (“series[0].bottom”, , 到文本 (底部留空距离) ＋ “%”)
+.如果结束
+.如果 (是否为空 (左侧留空距离))
+    json.置新值 (“series[0].left”, , “12%”)
+.否则
+    json.置新值 (“series[0].left”, , 到文本 (左侧留空距离) ＋ “%”)
+.如果结束
+.如果 (是否为空 (右侧留空距离))
+    json.置新值 (“series[0].right”, , “12%”)
+.否则
+    json.置新值 (“series[0].right”, , 到文本 (右侧留空距离) ＋ “%”)
+.如果结束
+
 
