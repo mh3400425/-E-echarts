@@ -319,43 +319,17 @@
 .如果结束
 
 
-.子程序 开启或关闭缩放组件, , 公开, 开启或关闭缩放组件。
+.子程序 设置缩放组件, , 公开, 设置X轴或Y轴缩放组件。
 .参数 json, eCharts_JSON类, 参考, 如果使用其他方式生成的json请先使用模块内置json类.解析()
-.参数 开启还是关闭, 逻辑型, 可空, 为空则翻转状态，真为开启，假为关闭。
-.局部变量 计数器, 整数型
-
-.如果 (是否为空 (开启还是关闭))
-    .如果 (json.数组_取长度 (“dataZoom”) ≥ 1)
-        .计次循环首 (json.数组_取长度 (“dataZoom”), 计数器)
-            json.置新值 (“dataZoom[” ＋ 到文本 (计数器 － 1) ＋ “].show”, , , , 取反 (json.取逻辑 (“dataZoom[” ＋ 到文本 (计数器 － 1) ＋ “].show”)))
-        .计次循环尾 ()
-    .否则
-        json.置新值 (“dataZoom.show”, , , , 取反 (json.取逻辑 (“dataZoom.show”)))
-    .如果结束
-
-.否则
-    .如果 (json.数组_取长度 (“dataZoom”) ≥ 1)
-        .计次循环首 (json.数组_取长度 (“dataZoom”), 计数器)
-            json.置新值 (“dataZoom[” ＋ 到文本 (计数器 － 1) ＋ “].show”, , , , 开启还是关闭)
-        .计次循环尾 ()
-    .否则
-        json.置新值 (“dataZoom.show”, , , , 开启还是关闭)
-    .如果结束
-
-.如果结束
-
-
-.子程序 添加缩放组件, , 公开, 添加X轴或Y轴缩放组件，同时覆盖原有缩放组件设置。
-.参数 json, eCharts_JSON类, 参考, 如果使用其他方式生成的json请先使用模块内置json类.解析()
-.参数 开启X轴缩放, 逻辑型, , 真为开启，假为不开启。
-.参数 开启Y轴缩放, 逻辑型, 可空, 为空将不开启。
-.参数 开启后自动启用, 逻辑型, 可空, 默认会自动启用。
+.参数 开启X轴缩放条, 逻辑型, , 真为开启，假为不开启。
+.参数 开启Y轴缩放条, 逻辑型, 可空, 真为开启，假为不开启。默认不开启
+.参数 开启X轴拖动及鼠标缩放, 逻辑型, 可空, 真为开启，假为不开启。默认随X轴缩放条开关
+.参数 开启Y轴拖动及鼠标缩放, 逻辑型, 可空, 真为开启，假为不开启。默认随Y轴缩放条开关
 .参数 X轴开始位置, 整数型, 可空, 默认为0（范围：0-100)
 .参数 X轴结束位置, 整数型, 可空, 默认为100（范围：0-100）
 .参数 Y轴开始位置, 整数型, 可空, 默认为0（范围：0-100）
 .参数 Y轴结束位置, 整数型, 可空, 默认为100（范围：0-100）
 .局部变量 临时数组, 整数型, , "0"
-.局部变量 是否启用, 逻辑型
 .局部变量 计数器, 整数型
 .局部变量 x_start, 整数型
 .局部变量 x_end, 整数型
@@ -363,11 +337,6 @@
 .局部变量 y_end, 整数型
 
 json.置新值 (“dataZoom”, “[]”)
-.如果 (是否为空 (开启后自动启用) 或 开启后自动启用)
-    是否启用 ＝ 真
-.否则
-    是否启用 ＝ 假
-.如果结束
 .如果 (是否为空 (X轴开始位置))
     x_start ＝ 0
 .否则
@@ -388,26 +357,56 @@ json.置新值 (“dataZoom”, “[]”)
 .否则
     y_end ＝ Y轴结束位置
 .如果结束
-.如果真 (开启X轴缩放)
-    json.数组_加入成员 (“dataZoom”, “{}”)
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].show”, , , , 是否启用)
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , x_start)
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , x_end)
-.如果真结束
-.如果真 (开启Y轴缩放)
-    json.数组_加入成员 (“dataZoom”, “{}”)
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].show”, , , , 是否启用)
-    .如果 (json.数组_取长度 (“yAxis”) ＞ 1)
-        .计次循环首 (json.数组_取长度 (“yAxis”), 计数器)
-            加入成员 (临时数组, 计数器 － 1)
-        .计次循环尾 ()
-        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, 创建JSON数组 (, , 临时数组))
-    .否则
-        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, , , 0)
-    .如果结束
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , y_start)
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , y_end)
-.如果真结束
+
+json.数组_加入成员 (“dataZoom”, “{}”)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].show”, , , , 开启X轴缩放条)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “slider”)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , x_start)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , x_end)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, , , 0)
+json.数组_加入成员 (“dataZoom”, “{}”)
+.如果 (是否为空 (开启X轴拖动及鼠标缩放))
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启X轴缩放条))
+.否则
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启X轴拖动及鼠标缩放))
+.如果结束
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “inside”)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , x_start)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , x_end)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, , , 0)
+
+json.数组_加入成员 (“dataZoom”, “{}”)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].show”, , , , 开启Y轴缩放条)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “slider”)
+.如果 (json.数组_取长度 (“yAxis”) ＞ 1)
+    .计次循环首 (json.数组_取长度 (“yAxis”), 计数器)
+        加入成员 (临时数组, 计数器 － 1)
+    .计次循环尾 ()
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, 创建JSON数组 (, , 临时数组))
+.否则
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, , , 0)
+.如果结束
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , y_start)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , y_end)
+
+json.数组_加入成员 (“dataZoom”, “{}”)
+.如果 (是否为空 (开启Y轴拖动及鼠标缩放))
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启Y轴缩放条))
+.否则
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启Y轴拖动及鼠标缩放))
+.如果结束
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “inside”)
+.如果 (json.数组_取长度 (“yAxis”) ＞ 1)
+    .计次循环首 (json.数组_取长度 (“yAxis”), 计数器)
+        加入成员 (临时数组, 计数器 － 1)
+    .计次循环尾 ()
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, 创建JSON数组 (, , 临时数组))
+.否则
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, , , 0)
+.如果结束
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , y_start)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , y_end)
+
 
 
 .子程序 开启或关闭工具组件, , 公开, 开启或关闭工具栏组件。
