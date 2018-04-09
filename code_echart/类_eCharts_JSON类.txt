@@ -262,7 +262,12 @@ Str ＝ 子文本替换 (Str, “function(filter){return JSON.stringify(this,fil
 .局部变量 Path, 文本型, , , 节点路径
 
 .如果 (参_节点路径 ≠ “”)
-    Path ＝ DataName ＋ “.” ＋ 参_节点路径
+    .如果 (取文本左边 (参_节点路径, 1) ＝ “[”)
+        Path ＝ DataName ＋ 参_节点路径
+    .否则
+        Path ＝ DataName ＋ “.” ＋ 参_节点路径
+    .如果结束
+
 .否则
     Path ＝ DataName
 .如果结束
