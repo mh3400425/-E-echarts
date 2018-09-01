@@ -12,7 +12,7 @@ CoInitialize (0)
 DataName ＝ “Json”
 Object.创建 (“MSScriptControl.ScriptControl”, )  ' //创建Com对象
 Object.写属性 (“Language”, “JavaScript”)  ' //设定语言
-Object.数值方法 (“AddCode”, #Js2)  ' //加载代码
+Object.数值方法 (“AddCode”, #Js3)  ' //加载代码
 Object.数值方法 (“Eval”, “var ” ＋ DataName ＋ “={}”)  ' //定义一个空对象
 
 .子程序 _销毁, , , 当基于本类的对象被销毁前，此方法会被自动调用
@@ -33,6 +33,7 @@ CoUninitialize ()
 .如果真结束
 Object.数值方法 (“Eval”, “var ” ＋ DataName ＋ “=null”)  ' //初始化
 Object.数值方法 (“AddCode”, “var ” ＋ DataName ＋ “=eval(” ＋ 参_Json文本 ＋ “)”)  ' //使用eval()方法，但是该方法存在性能和安全方面的问题！
+
 返回 (Object.逻辑方法 (“Eval”, “null !=” ＋ DataName))
 
 .子程序 U2A, 文本型, , 将usc2转变成ansi  如 %u0031%u0032%u0033 转换后为 123 失败返回空文本
@@ -486,7 +487,7 @@ Arr ＝ 分割文本 (PathFilter (参_节点路径), “.”, )  ' //这里直�
             Voluation (Path, Key)  ' //这里直接进行Json赋值，因为之前已经进行了数据处理
         .如果真结束
 
-        .如果真 (是否存在 (取文本右边 (Path, 取文本长度 (Path) － 1)) ＝ 假)  ' //其他位置
+        .如果真 (是否存在 (取文本右边 (Path, 取文本长度 (Path) － 1)) ＝ 假 且 Key ≠ “null”)  ' //其他位置
             .如果真 (取文本右边 (Arr [i], 1) ＝ “]”)  ' //判断数据类型，这里是数组类型
                 AddNewArr (Path)  ' //新增空数组成员
             .如果真结束
@@ -555,7 +556,12 @@ Arr ＝ 分割文本 (PathFilter (参_节点路径), “.”, )  ' //这里直�
 .参数 参_节点路径, 文本型
 .参数 参_新值, 文本型
 
-Object.方法 (“Eval”, DataName ＋ 参_节点路径 ＋ “=” ＋ 参_新值)  ' //对数组进行赋值
+.如果 (参_新值 ＝ “null”)
+    Object.数值方法 (“Eval”, DataName ＋ 参_节点路径 ＋ “=null”)
+.否则
+    Object.方法 (“Eval”, DataName ＋ 参_节点路径 ＋ “=” ＋ 参_新值)
+.如果结束
+
 
 .子程序 AddNewObj, , , 新增空白对象
 .参数 参_节点路径, 文本型
