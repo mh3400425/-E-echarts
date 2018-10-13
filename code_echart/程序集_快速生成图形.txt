@@ -33,8 +33,8 @@
 .参数 图例数据, 文本型, 可空, 为空时将自动获取（必须先设置图形数据才能自动获取）。图例数据组。格式为：“['数据1','数据2'...]”，强烈建议由“创建JSON数组()”生成。
 .参数 图例布局朝向, 逻辑型, 可空, 默认为：假=水平排列，设真=垂直排列，设假=水平排列。
 .参数 左, 文本型, 可空, 默认为“auto”，组件距离容器左侧的距离。可选“left”、“center”、“right”或百分比“20%”或像素值“20px”。
-.参数 右, 文本型, 可空, 默认为“auto”，组件距离容器上侧的距离。可选“top”、“middle”、“bottom”或百分比“20%”或像素值“20px”。
-.参数 上, 文本型, 可空, 默认为“auto”，组件距离容器右侧的距离。可选百分比“20%”或像素值“20px”。
+.参数 右, 文本型, 可空, 默认为“auto”，组件距离容器右侧的距离。可选百分比“20%”或像素值“20px”。
+.参数 上, 文本型, 可空, 默认为“auto”，组件距离容器上侧的距离。可选“top”、“middle”、“bottom”或百分比“20%”或像素值“20px”。
 .参数 下, 文本型, 可空, 默认为“auto”，组件距离容器下侧的距离。可选百分比“20%”或像素值“20px”。
 .局部变量 计数器, 整数型
 .局部变量 计数器1, 整数型
@@ -154,8 +154,8 @@
 .参数 副标题_文字颜色, 文本型, 可空, 默认为：“#aaa”
 .参数 副标题_文字大小, 整数型, 可空, 默认为：12
 .参数 左, 文本型, 可空, 默认为“auto”，组件距离容器左侧的距离。可选“left”、“center”、“right”或百分比“20%”或像素值“20px”。
-.参数 右, 文本型, 可空, 默认为“auto”，组件距离容器上侧的距离。可选“top”、“middle”、“bottom”或百分比“20%”或像素值“20px”。
-.参数 上, 文本型, 可空, 默认为“auto”，组件距离容器右侧的距离。可选百分比“20%”或像素值“20px”。
+.参数 右, 文本型, 可空, 默认为“auto”，组件距离容器右侧的距离。可选百分比“20%”或像素值“20px”。
+.参数 上, 文本型, 可空, 默认为“auto”，组件距离容器上侧的距离。可选“top”、“middle”、“bottom”或百分比“20%”或像素值“20px”。
 .参数 下, 文本型, 可空, 默认为“auto”，组件距离容器下侧的距离。可选百分比“20%”或像素值“20px”。
 .局部变量 计数器, 整数型
 
@@ -188,15 +188,15 @@
 .否则
     json.置新值 (“title.left”, , 左)
 .如果结束
-.如果 (是否为空 (右))
-    json.置新值 (“title.right”, , “auto”)
-.否则
-    json.置新值 (“title.right”, , 右)
-.如果结束
 .如果 (是否为空 (上))
     json.置新值 (“title.top”, , “auto”)
 .否则
     json.置新值 (“title.top”, , 上)
+.如果结束
+.如果 (是否为空 (右))
+    json.置新值 (“title.right”, , “auto”)
+.否则
+    json.置新值 (“title.right”, , 右)
 .如果结束
 .如果 (是否为空 (下))
     json.置新值 (“title.bottom”, , “auto”)
@@ -222,6 +222,10 @@
 .参数 轴颜色, 文本型, 可空
 .参数 绑定grid组件, 整数型, 可空, 默认绑定索引0的grid（grid组件不设置将会自动创建0号grid组件）。
 .参数 修改指定索引的x轴参数, 整数型, 可空, 索引从0开始。留空或指定的索引不存在时将添加新x轴，指定的索引存在将覆盖其参数。
+.参数 是否脱离锁定0刻度, 逻辑型, 可空, 默认为：假=永远显示0刻度。为真=脱离0刻度锁定（相当于设置了dataMax和dataMin但会自动在图形数据区外添加视觉缓冲区），设置"dataMax"或"dataMin"后此参数会失效。
+.参数 轴名称显示位置, 整数型, 可空, 默认为2=轴终点，可选：2=轴终点end，1=轴中间middle，0=轴起点start。
+.参数 轴名称与轴线的距离, 整数型, 可空, 默认：15
+.参数 轴名称旋转角度, 整数型, 可空
 .局部变量 计数器, 整数型
 .局部变量 索引, 整数型
 
@@ -330,7 +334,35 @@
 .否则
     json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].gridIndex”, , , 绑定grid组件)
 .如果结束
+' 是否脱离锁定0刻度
+.如果 (是否为空 (是否脱离锁定0刻度))
+    json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].scale”, , , , 假)
+.否则
+    json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].scale”, , , , 是否脱离锁定0刻度)
+.如果结束
+' 名称显示位置
+.如果 (是否为空 (轴名称显示位置))
+    json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “end”)
+.否则
+    .判断开始 (轴名称显示位置 ＝ 2)  ' end
+        json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “end”)
+    .判断 (轴名称显示位置 ＝ 1)  ' middle
+        json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “middle”)
+    .判断 (轴名称显示位置 ＝ 0)  ' start
+        json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “start”)
+    .默认
 
+    .判断结束
+
+.如果结束
+' 名称与轴线的距离
+.如果真 (是否为空 (轴名称与轴线的距离) ＝ 假)
+    json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].nameGap”, , , 轴名称与轴线的距离)
+.如果真结束
+' 轴名称旋转角度
+.如果真 (是否为空 (轴名称旋转角度) ＝ 假)
+    json.置新值 (“xAxis[” ＋ 到文本 (索引) ＋ “].nameRotate”, , , 轴名称旋转角度)
+.如果真结束
 返回 (索引)
 
 .子程序 设置Y轴, 整数型, 公开, 设置Y轴组件，返回此y轴的索引号，支持设置或修改多组X/Y轴组件，参数留空将保持原设定。
@@ -348,6 +380,9 @@
 .参数 轴颜色, 文本型, 可空
 .参数 绑定grid组件, 整数型, 可空, 默认绑定索引0的grid（grid组件不设置将会自动创建0号grid组件）。
 .参数 修改指定索引的x轴参数, 整数型, 可空, 索引从0开始。留空或指定的索引不存在时将添加新x轴，指定的索引存在将覆盖其参数。
+.参数 名称显示位置, 整数型, 可空, 默认为2=轴终点，可选：2=轴终点end，1=轴中间middle，0=轴起点start。
+.参数 轴名称与轴线的距离, 整数型, 可空, 默认15
+.参数 轴名称旋转角度, 整数型, 可空
 .局部变量 计数器, 整数型
 .局部变量 索引, 整数型
 
@@ -444,19 +479,54 @@
 .否则
     json.置新值 (“yAxis[” ＋ 到文本 (索引) ＋ “].gridIndex”, , , 绑定grid组件)
 .如果结束
+' 名称显示位置
+.如果 (是否为空 (名称显示位置))
+    json.置新值 (“yAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “end”)
+.否则
+    .判断开始 (名称显示位置 ＝ 2)  ' end
+        json.置新值 (“yAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “end”)
+    .判断 (名称显示位置 ＝ 1)  ' middle
+        json.置新值 (“yAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “middle”)
+    .判断 (名称显示位置 ＝ 0)  ' start
+        json.置新值 (“yAxis[” ＋ 到文本 (索引) ＋ “].nameLocation”, , “start”)
+    .默认
+
+    .判断结束
+
+.如果结束
+' 名称与轴线的距离
+.如果真 (是否为空 (轴名称与轴线的距离) ＝ 假)
+    json.置新值 (“yAxis[” ＋ 到文本 (索引) ＋ “].nameGap”, , , 轴名称与轴线的距离)
+.如果真结束
+' 轴名称旋转角度
+.如果真 (是否为空 (轴名称旋转角度) ＝ 假)
+    json.置新值 (“yAxis[” ＋ 到文本 (索引) ＋ “].nameRotate”, , , 轴名称旋转角度)
+.如果真结束
 
 返回 (索引)
 
 .子程序 设置缩放组件, , 公开, 设置X轴或Y轴缩放组件。
 .参数 json, eCharts_JSON类, 参考, 如果使用其他方式生成的json请先使用模块内置json类.解析()
-.参数 开启X轴缩放条, 逻辑型, , 真为开启，假为不开启。
+.参数 开启X轴缩放条, 逻辑型, 可空, 真为开启，假为不开启。默认开启
 .参数 开启Y轴缩放条, 逻辑型, 可空, 真为开启，假为不开启。默认不开启
 .参数 开启X轴拖动及鼠标缩放, 逻辑型, 可空, 真为开启，假为不开启。默认随X轴缩放条开关
 .参数 开启Y轴拖动及鼠标缩放, 逻辑型, 可空, 真为开启，假为不开启。默认随Y轴缩放条开关
-.参数 X轴开始位置, 整数型, 可空, 默认为0（范围：0-100)
-.参数 X轴结束位置, 整数型, 可空, 默认为100（范围：0-100）
-.参数 Y轴开始位置, 整数型, 可空, 默认为0（范围：0-100）
-.参数 Y轴结束位置, 整数型, 可空, 默认为100（范围：0-100）
+.参数 X轴开始位置, 整数型, 可空, 默认为0（百分比，范围：0-100)
+.参数 X轴结束位置, 整数型, 可空, 默认为100（百分比，范围：0-100）
+.参数 Y轴开始位置, 整数型, 可空, 默认为0（百分比，范围：0-100）
+.参数 Y轴结束位置, 整数型, 可空, 默认为100（百分比，范围：0-100）
+.参数 要绑定的x轴索引, 整数型, 可空 数组, 留空默认绑定第一个x轴，支持同时绑定多个坐标轴，所以参数为整数型数组，例如：如需绑定第一个和第三格x轴，则参数内容填：“{0,2}”（0是首位）
+.参数 要绑定的y轴索引, 整数型, 可空 数组, 同上
+.参数 鼠标交互方式, 整数型, 可空, 默认允许使用鼠标或滚轮来控制缩放和平移。可选参数（常量）：“#缩放组件交互_...”
+.参数 拖动缩放条是否实时更新, 逻辑型, 可空, 默认为真，拖动时实时更新视图。为假时在拖动结束后更新视图。
+.参数 x轴缩放条_左, 文本型, 可空, 默认为“auto”，组件距离容器左侧的距离。可选“left”、“center”、“right”或百分比“20%”或像素值“20px”。
+.参数 x轴缩放条_右, 文本型, 可空, 默认为“auto”，组件距离容器右侧的距离。可选百分比“20%”或像素值“20px”。
+.参数 x轴缩放条_上, 文本型, 可空, 默认为“auto”，组件距离容器上侧的距离。可选“top”、“middle”、“bottom”或百分比“20%”或像素值“20px”。
+.参数 x轴缩放条_下, 文本型, 可空, 默认为“auto”，组件距离容器下侧的距离。可选百分比“20%”或像素值“20px”。
+.参数 y轴缩放条_左, 文本型, 可空, 默认为“auto”，组件距离容器左侧的距离。可选“left”、“center”、“right”或百分比“20%”或像素值“20px”。
+.参数 y轴缩放条_右, 文本型, 可空, 默认为“auto”，组件距离容器右侧的距离。可选百分比“20%”或像素值“20px”。
+.参数 y轴缩放条_上, 文本型, 可空, 默认为“auto”，组件距离容器上侧的距离。可选“top”、“middle”、“bottom”或百分比“20%”或像素值“20px”。
+.参数 y轴缩放条_下, 文本型, 可空, 默认为“auto”，组件距离容器下侧的距离。可选百分比“20%”或像素值“20px”。
 .局部变量 临时数组, 整数型, , "0"
 .局部变量 计数器, 整数型
 .局部变量 x_start, 整数型
@@ -486,55 +556,145 @@ json.置新值 (“dataZoom”, “[]”)
     y_end ＝ Y轴结束位置
 .如果结束
 
+.如果真 (是否为空 (开启X轴缩放条))
+    开启X轴缩放条 ＝ 真
+.如果真结束
+.如果真 (是否为空 (拖动缩放条是否实时更新))
+    拖动缩放条是否实时更新 ＝ 真
+.如果真结束
+
 json.数组_加入成员 (“dataZoom”, “{}”)
 json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].show”, , , , 开启X轴缩放条)
 json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “slider”)
 json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , x_start)
 json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , x_end)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, , , 0)
-json.数组_加入成员 (“dataZoom”, “{}”)
-.如果 (是否为空 (开启X轴拖动及鼠标缩放))
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启X轴缩放条))
+.如果 (是否为空 (要绑定的x轴索引))
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, , , 0)
 .否则
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启X轴拖动及鼠标缩放))
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, 创建JSON数组 (, , 要绑定的x轴索引))
 .如果结束
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “inside”)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , x_start)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , x_end)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, , , 0)
+json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].realtime”, , , , 拖动缩放条是否实时更新)
+.如果真 (是否为空 (x轴缩放条_左) ＝ 假)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].left”, , x轴缩放条_左)
+.如果真结束
+.如果真 (是否为空 (x轴缩放条_上) ＝ 假)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].top”, , x轴缩放条_上)
+.如果真结束
+.如果真 (是否为空 (x轴缩放条_右) ＝ 假)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].right”, , x轴缩放条_右)
+.如果真结束
+.如果真 (是否为空 (x轴缩放条_下) ＝ 假)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].bottom”, , x轴缩放条_下)
+.如果真结束
 
-json.数组_加入成员 (“dataZoom”, “{}”)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].show”, , , , 开启Y轴缩放条)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “slider”)
-.如果 (json.数组_取长度 (“yAxis”) ＞ 1)
-    .计次循环首 (json.数组_取长度 (“yAxis”), 计数器)
-        加入成员 (临时数组, 计数器 － 1)
-    .计次循环尾 ()
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, 创建JSON数组 (, , 临时数组))
-.否则
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, , , 0)
-.如果结束
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , y_start)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , y_end)
+.如果真 (是否为空 (开启X轴拖动及鼠标缩放) 或 开启X轴拖动及鼠标缩放)
+    json.数组_加入成员 (“dataZoom”, “{}”)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 假)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “inside”)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , x_start)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , x_end)
+    .如果 (是否为空 (要绑定的x轴索引))
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, , , 0)
+    .否则
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].xAxisIndex”, 创建JSON数组 (, , 要绑定的x轴索引))
+    .如果结束
 
-json.数组_加入成员 (“dataZoom”, “{}”)
-.如果 (是否为空 (开启Y轴拖动及鼠标缩放))
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启Y轴缩放条))
-.否则
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 取反 (开启Y轴拖动及鼠标缩放))
-.如果结束
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “inside”)
-.如果 (json.数组_取长度 (“yAxis”) ＞ 1)
-    .计次循环首 (json.数组_取长度 (“yAxis”), 计数器)
-        加入成员 (临时数组, 计数器 － 1)
-    .计次循环尾 ()
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, 创建JSON数组 (, , 临时数组))
-.否则
-    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, , , 0)
-.如果结束
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , y_start)
-json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , y_end)
+    .如果真 (鼠标交互方式 ≥ 1 且 鼠标交互方式 ≤ 5)
+        .判断开始 (鼠标交互方式 ＝ 1)  ' 允许鼠标交互
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , , , 真)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , , , 真)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , , , 真)
+        .判断 (鼠标交互方式 ＝ 2)  ' 不允许鼠标交互
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , , , 假)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , , , 假)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , , , 假)
+        .判断 (鼠标交互方式 ＝ 3)  ' 按shift时允许
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , “shift”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , “shift”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , “shift”)
+        .判断 (鼠标交互方式 ＝ 4)  ' 按ctrl时允许
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , “ctrl”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , “ctrl”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , “ctrl”)
+        .判断 (鼠标交互方式 ＝ 5)  ' 按alt时允许
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , “alt”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , “alt”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , “alt”)
+        .默认
 
+        .判断结束
+
+    .如果真结束
+
+.如果真结束
+
+.如果真 (开启Y轴缩放条)
+    json.数组_加入成员 (“dataZoom”, “{}”)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].show”, , , , 真)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “slider”)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , y_start)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , y_end)
+    .如果 (是否为空 (要绑定的y轴索引))
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, , , 0)
+    .否则
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, 创建JSON数组 (, , 要绑定的y轴索引))
+    .如果结束
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].realtime”, , , , 拖动缩放条是否实时更新)
+    .如果真 (是否为空 (y轴缩放条_左) ＝ 假)
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].left”, , y轴缩放条_左)
+    .如果真结束
+    .如果真 (是否为空 (y轴缩放条_上) ＝ 假)
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].top”, , y轴缩放条_上)
+    .如果真结束
+    .如果真 (是否为空 (y轴缩放条_右) ＝ 假)
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].right”, , y轴缩放条_右)
+    .如果真结束
+    .如果真 (是否为空 (y轴缩放条_下) ＝ 假)
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].bottom”, , y轴缩放条_下)
+    .如果真结束
+
+.如果真结束
+
+.如果真 (是否为空 (开启Y轴拖动及鼠标缩放) 或 开启Y轴拖动及鼠标缩放)
+    json.数组_加入成员 (“dataZoom”, “{}”)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].disabled”, , , , 假)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].type”, , “inside”)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].start”, , , y_start)
+    json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].end”, , , y_end)
+    .如果 (是否为空 (要绑定的y轴索引))
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, , , 0)
+    .否则
+        json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].yAxisIndex”, 创建JSON数组 (, , 要绑定的y轴索引))
+    .如果结束
+
+    .如果真 (鼠标交互方式 ≥ 1 且 鼠标交互方式 ≤ 5)
+        .判断开始 (鼠标交互方式 ＝ 1)  ' 允许鼠标交互
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , , , 真)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , , , 真)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , , , 真)
+        .判断 (鼠标交互方式 ＝ 2)  ' 不允许鼠标交互
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , , , 假)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , , , 假)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , , , 假)
+        .判断 (鼠标交互方式 ＝ 3)  ' 按shift时允许
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , “shift”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , “shift”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , “shift”)
+        .判断 (鼠标交互方式 ＝ 4)  ' 按ctrl时允许
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , “ctrl”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , “ctrl”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , “ctrl”)
+        .判断 (鼠标交互方式 ＝ 5)  ' 按alt时允许
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].zoomOnMouseWheel”, , “alt”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseMove”, , “alt”)
+            json.置新值 (“dataZoom[” ＋ 到文本 (json.数组_取长度 (“dataZoom”) － 1) ＋ “].moveOnMouseWheel”, , “alt”)
+        .默认
+
+        .判断结束
+
+    .如果真结束
+
+.如果真结束
 
 
 .子程序 设置时间轴, eCharts_JSON类, 公开, 设置时间轴，时间轴组件允许自动/手动从多组图形配置option中切换操作。【请注意：本命令请在基本图形参数json设置完毕最后调用。】
@@ -835,24 +995,28 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, 数据组
 .否则
     json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].smooth”, , , , 是否平滑折线)
 .如果结束
-.如果真 (是否为空 (是否阶梯线图) ＝ 假)
+.如果 (是否为空 (是否阶梯线图))
+    json.删除 (“series[” ＋ 到文本 (索引) ＋ “].step”)
+.否则
     json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].step”, , , , 是否阶梯线图)
-.如果真结束
-.如果真 (是否为空 (是否区域填充) ＝ 假)
+.如果结束
+.如果 (是否为空 (是否区域填充) 或 是否区域填充 ＝ 假)
+    json.删除 (“series[” ＋ 到文本 (索引) ＋ “].areaStyle”)
+.否则
     json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].areaStyle.normal”, “”)
-.如果真结束
+.如果结束
 .如果真 (添加标注点_最小值 或 添加标注点_最大值 或 添加标注点_平均值)
-    .如果真 (是否为空 (添加标注点_最大值) ＝ 假)
+    .如果真 (是否为空 (添加标注点_最大值) ＝ 假 且 添加标注点_最大值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data[” ＋ 到文本 (计数器) ＋ “].type”, , “max”)
     .如果真结束
-    .如果真 (是否为空 (添加标注点_最小值) ＝ 假)
+    .如果真 (是否为空 (添加标注点_最小值) ＝ 假 且 添加标注点_最小值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data[” ＋ 到文本 (计数器) ＋ “].type”, , “min”)
     .如果真结束
-    .如果真 (是否为空 (添加标注点_平均值) ＝ 假)
+    .如果真 (是否为空 (添加标注点_平均值) ＝ 假 且 添加标注点_平均值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data[” ＋ 到文本 (计数器) ＋ “].type”, , “average”)
@@ -860,17 +1024,17 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, 数据组
 
 .如果真结束
 .如果真 (添加标线_最小值 或 添加标线_最大值 或 添加标线_平均值)
-    .如果真 (是否为空 (添加标线_最大值) ＝ 假)
+    .如果真 (是否为空 (添加标线_最大值) ＝ 假 且 添加标线_最大值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data[” ＋ 到文本 (计数器) ＋ “].type”, , “max”)
     .如果真结束
-    .如果真 (是否为空 (添加标线_最小值) ＝ 假)
+    .如果真 (是否为空 (添加标线_最小值) ＝ 假 且 添加标线_最小值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data[” ＋ 到文本 (计数器) ＋ “].type”, , “min”)
     .如果真结束
-    .如果真 (是否为空 (添加标线_平均值) ＝ 假)
+    .如果真 (是否为空 (添加标线_平均值) ＝ 假 且 添加标线_平均值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data[” ＋ 到文本 (计数器) ＋ “].type”, , “average”)
@@ -913,17 +1077,17 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].name”, , 名称)
 json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “bar”)
 json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, 数据组)
 .如果真 (添加标注点_最小值 或 添加标注点_最大值 或 添加标注点_平均值)
-    .如果真 (是否为空 (添加标注点_最大值) ＝ 假)
+    .如果真 (是否为空 (添加标注点_最大值) ＝ 假 且 添加标注点_最大值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data[” ＋ 到文本 (计数器) ＋ “].type”, , “max”)
     .如果真结束
-    .如果真 (是否为空 (添加标注点_最小值) ＝ 假)
+    .如果真 (是否为空 (添加标注点_最小值) ＝ 假 且 添加标注点_最小值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data[” ＋ 到文本 (计数器) ＋ “].type”, , “min”)
     .如果真结束
-    .如果真 (是否为空 (添加标注点_平均值) ＝ 假)
+    .如果真 (是否为空 (添加标注点_平均值) ＝ 假 且 添加标注点_平均值 ＝ 真)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markPoint.data[” ＋ 到文本 (计数器) ＋ “].type”, , “average”)
@@ -931,17 +1095,17 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, 数据组
 
 .如果真结束
 .如果真 (添加标线_最小值 或 添加标线_最大值 或 添加标线_平均值)
-    .如果真 (是否为空 (添加标线_最大值) ＝ 假)
+    .如果真 (是否为空 (添加标线_最大值) ＝ 假 且 添加标线_最大值)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data[” ＋ 到文本 (计数器) ＋ “].type”, , “max”)
     .如果真结束
-    .如果真 (是否为空 (添加标线_最小值) ＝ 假)
+    .如果真 (是否为空 (添加标线_最小值) ＝ 假 且 添加标线_最小值)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data[” ＋ 到文本 (计数器) ＋ “].type”, , “min”)
     .如果真结束
-    .如果真 (是否为空 (添加标线_平均值) ＝ 假)
+    .如果真 (是否为空 (添加标线_平均值) ＝ 假 且 添加标线_平均值)
         json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”, “{}”)
         计数器 ＝ json.数组_取长度 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data”) － 1
         json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].markLine.data[” ＋ 到文本 (计数器) ＋ “].type”, , “average”)
@@ -1166,7 +1330,7 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到�
 .参数 json, eCharts_JSON类, 参考, 如果使用其他方式生成的json请先使用模块内置json类.解析()
 .参数 数据组, K线数据格式, 可空 数组, K线数据组。
 .参数 均线天数MA, 文本型, 可空, 为空则不显示，也支持多个，以符号“+”分割，例如：“5+10+20+30”，计算价格均线将影响K线生成时间（大约增加10%~30%）
-.参数 数据组占位变量, 逻辑型, 可空, 将填写为“##占位##”，用于后续替换成js变量名（数据量比较大时可以节省加载时间），填写此参数后将忽略上边“数据组”参数。
+.参数 数据组占位变量, 逻辑型, 可空, 置真时将为data填写为“##占位##”，用于后续替换成js变量名（数据量比较大时可以节省加载时间，注意替换要带引号：#引号+“##占位##”+#引号），填写此参数后将忽略上边“数据组”和“均线天数MA”参数，均线折线需手动添加。
 .局部变量 临时小数数组, 双精度小数型, , "0"
 .局部变量 临时文本数组, 文本型, , "0"
 .局部变量 MA数组, 整数型, , "0"
@@ -1199,21 +1363,23 @@ json.数组_加入成员 (“series”, “{}”)
 索引 ＝ json.数组_取长度 (“series”) － 1
 json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].name”, , “日K”)
 json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “candlestick”)
-.如果 (是否为空 (数据组占位变量))
-    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, temp.取代码 ())
-.否则
+.如果 (数据组占位变量 ＝ 真)
     json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, , “##占位##”)
+.否则
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, temp.取代码 ())
 .如果结束
 
-.计次循环首 (取数组成员数 (MA数组), 计数器)
-    json.数组_加入成员 (“series”, “{}”)
-    索引 ＝ json.数组_取长度 (“series”) － 1
-    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].name”, , “MA” ＋ 到文本 (MA数组 [计数器]))
-    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “line”)
-    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, 计算_K线图价格均线MA (数据组, MA数组 [计数器]))
-    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].smooth”, , , , 真)
-    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].lineStyle.normal.opacity”, , , 0.5)
-.计次循环尾 ()
+.如果真 (数据组占位变量 ≠ 真)
+    .计次循环首 (取数组成员数 (MA数组), 计数器)
+        json.数组_加入成员 (“series”, “{}”)
+        索引 ＝ json.数组_取长度 (“series”) － 1
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].name”, , “MA” ＋ 到文本 (MA数组 [计数器]))
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “line”)
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, 计算_K线图价格均线MA (数据组, MA数组 [计数器]))
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].smooth”, , , , 真)
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].lineStyle.normal.opacity”, , , 0.5)
+    .计次循环尾 ()
+.如果真结束
 
 
 .子程序 添加图形数据_词云图, , 公开, 添加词云图。
@@ -1227,36 +1393,38 @@ json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “cand
 .参数 词条尺寸范围_最大, 整数型, 可空, 可空，默认50。词条随机尺寸的范围最大值。
 .参数 词条旋转角度范围_最小, 整数型, 可空, 可空，默认0（不旋转）。词条随机旋转角度的范围最小值。
 .参数 词条旋转角度范围_最大, 整数型, 可空, 可空，默认0（不旋转）。词条随机旋转角度的范围最大值。
+.局部变量 索引, 整数型
 .局部变量 i, 整数型
 .局部变量 次数, 整数型
 .局部变量 temp_json, eCharts_JSON类
 
-json.解析 ()
-json.置新值 (“series[0].type”, , “wordCloud”)
+json.数组_加入成员 (“series”, “{}”)
+索引 ＝ json.数组_取长度 (“series”) － 1
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “wordCloud”)
 .如果 (是否为空 (词条间隔大小))
-    json.置新值 (“series[0].gridSize”, , , 20)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].gridSize”, , , 20)
 .否则
-    json.置新值 (“series[0].gridSize”, , , 词条间隔大小)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].gridSize”, , , 词条间隔大小)
 .如果结束
 .如果 (是否为空 (词条尺寸范围_最小))
-    json.置新值 (“series[0].sizeRange[0]”, , , 12)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].sizeRange[0]”, , , 12)
 .否则
-    json.置新值 (“series[0].sizeRange[0]”, , , 词条尺寸范围_最小)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].sizeRange[0]”, , , 词条尺寸范围_最小)
 .如果结束
 .如果 (是否为空 (词条尺寸范围_最大))
-    json.置新值 (“series[0].sizeRange[1]”, , , 50)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].sizeRange[1]”, , , 50)
 .否则
-    json.置新值 (“series[0].sizeRange[1]”, , , 词条尺寸范围_最大)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].sizeRange[1]”, , , 词条尺寸范围_最大)
 .如果结束
 .如果 (是否为空 (词条旋转角度范围_最小))
-    json.置新值 (“series[0].rotationRange[0]”, , , 0)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].rotationRange[0]”, , , 0)
 .否则
-    json.置新值 (“series[0].rotationRange[0]”, , , 词条旋转角度范围_最小)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].rotationRange[0]”, , , 词条旋转角度范围_最小)
 .如果结束
 .如果 (是否为空 (词条旋转角度范围_最大))
-    json.置新值 (“series[0].rotationRange[1]”, , , 0)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].rotationRange[1]”, , , 0)
 .否则
-    json.置新值 (“series[0].rotationRange[1]”, , , 词条旋转角度范围_最大)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].rotationRange[1]”, , , 词条旋转角度范围_最大)
 .如果结束
 .如果 (取数组成员数 (词条数据组) ＜ 取数组成员数 (词条名称组))
     次数 ＝ 取数组成员数 (词条数据组)
@@ -1264,8 +1432,8 @@ json.置新值 (“series[0].type”, , “wordCloud”)
     次数 ＝ 取数组成员数 (词条名称组)
 .如果结束
 .如果真 (是否为空 (词条阴影) 或 词条阴影)
-    json.置新值 (“series[0].textStyle.emphasis.shadowBlur”, , , 10)
-    json.置新值 (“series[0].textStyle.emphasis.shadowColor”, , “#333”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].textStyle.emphasis.shadowBlur”, , , 10)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].textStyle.emphasis.shadowColor”, , “#333”)
 .如果真结束
 置随机数种子 (取小时 (取现行时间 ()) × 取秒 (取现行时间 ()))
 .计次循环首 (次数, i)
@@ -1276,7 +1444,7 @@ json.置新值 (“series[0].type”, , “wordCloud”)
     .如果真 (是否为空 (词条随机颜色) 或 词条随机颜色)
         temp_json.置新值 (“textStyle.normal.color”, , “rgb(” ＋ 到文本 (取随机数 (0, 255)) ＋ “,” ＋ 到文本 (取随机数 (0, 255)) ＋ “,” ＋ 到文本 (取随机数 (0, 255)) ＋ “)”)
     .如果真结束
-    json.数组_加入成员 (“series[0].data”, temp_json.取代码 ())
+    json.数组_加入成员 (“series[” ＋ 到文本 (索引) ＋ “].data”, temp_json.取代码 ())
 .计次循环尾 ()
 
 
@@ -1284,31 +1452,33 @@ json.置新值 (“series[0].type”, , “wordCloud”)
 .参数 json, eCharts_JSON类, 参考
 .参数 关系节点组, 关系节点, 数组
 .参数 对应关系组, 对应关系, 数组
+.局部变量 索引, 整数型
 .局部变量 分类组, 文本型, , "0"
 .局部变量 分类编号, 文本型, , "0"
 .局部变量 计数器1, 整数型
 .局部变量 计数器2, 整数型
 .局部变量 是否存在, 逻辑型
 
-json.解析 ()
+json.数组_加入成员 (“series”, “{}”)
+索引 ＝ json.数组_取长度 (“series”) － 1
 json.置新值 (“series”, “[]”)
-json.置新值 (“series[0].type”, , “graph”)
-json.置新值 (“series[0].layout”, , “force”)
-json.置新值 (“series[0].symbolSize”, , , 45)
-json.置新值 (“series[0].focusNodeAdjacency”, , , , 真)
-json.置新值 (“series[0].roam”, , , , 真)
-json.置新值 (“series[0].draggable”, , , , 真)
-json.置新值 (“series[0].label.normal.show”, , , , 真)
-json.置新值 (“series[0].label.normal.textStyle.fontSize”, , , 12)
-json.置新值 (“series[0].force.repulsion”, , , 1000)
-json.置新值 (“series[0].edgeSymbolSize[0]”, , , 4)
-json.置新值 (“series[0].edgeSymbolSize[1]”, , , 50)
-json.置新值 (“series[0].edgeLabel.normal.show”, , , , 真)
-json.置新值 (“series[0].edgeLabel.normal.textStyle.fontSize”, , , 10)
-json.置新值 (“series[0].edgeLabel.normal.formatter”, , “{c}”)
-json.置新值 (“series[0].lineStyle.normal.opacity”, , , 0.9)
-json.置新值 (“series[0].lineStyle.normal.width”, , , 1)
-json.置新值 (“series[0].lineStyle.normal.curveness”, , , 0)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “graph”)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].layout”, , “force”)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”, , , 45)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].focusNodeAdjacency”, , , , 真)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].roam”, , , , 真)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].draggable”, , , , 真)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”, , , , 真)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.textStyle.fontSize”, , , 12)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].force.repulsion”, , , 1000)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].edgeSymbolSize[0]”, , , 4)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].edgeSymbolSize[1]”, , , 50)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].edgeLabel.normal.show”, , , , 真)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].edgeLabel.normal.textStyle.fontSize”, , , 10)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].edgeLabel.normal.formatter”, , “{c}”)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].lineStyle.normal.opacity”, , , 0.9)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].lineStyle.normal.width”, , , 1)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].lineStyle.normal.curveness”, , , 0)
 .计次循环首 (取数组成员数 (关系节点组), 计数器1)
     是否存在 ＝ 假
     .计次循环首 (取数组成员数 (分类组), 计数器2)
@@ -1323,40 +1493,40 @@ json.置新值 (“series[0].lineStyle.normal.curveness”, , , 0)
 
 .计次循环尾 ()
 .计次循环首 (取数组成员数 (分类组), 计数器1)
-    json.置新值 (“series[0].categories[” ＋ 到文本 (计数器1 － 1) ＋ “].name”, , 分类组 [计数器1])
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].categories[” ＋ 到文本 (计数器1 － 1) ＋ “].name”, , 分类组 [计数器1])
 .计次循环尾 ()
 .计次循环首 (取数组成员数 (关系节点组), 计数器1)
-    json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].name”, , 关系节点组 [计数器1].节点名称)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].name”, , 关系节点组 [计数器1].节点名称)
     .如果真 (关系节点组 [计数器1].节点数值 ≠ “”)
-        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].value”, , , 到数值 (关系节点组 [计数器1].节点名称))
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].value”, , , 到数值 (关系节点组 [计数器1].节点名称))
     .如果真结束
     .如果真 (关系节点组 [计数器1].节点样式 ≠ “”)
         .判断开始 (关系节点组 [计数器1].节点样式 ＝ “1”)
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “circle”)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “circle”)
         .判断 (关系节点组 [计数器1].节点样式 ＝ “2”)
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “rect”)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “rect”)
         .判断 (关系节点组 [计数器1].节点样式 ＝ “3”)
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “roundRect”)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “roundRect”)
         .判断 (关系节点组 [计数器1].节点样式 ＝ “4”)
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “triangle”)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “triangle”)
         .判断 (关系节点组 [计数器1].节点样式 ＝ “5”)
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “diamond”)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “diamond”)
         .判断 (关系节点组 [计数器1].节点样式 ＝ “6”)
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “pin”)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “pin”)
         .判断 (关系节点组 [计数器1].节点样式 ＝ “7”)
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “arrow”)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , “arrow”)
         .默认
-            json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , 关系节点组 [计数器1].节点样式)
+            json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbol”, , 关系节点组 [计数器1].节点样式)
         .判断结束
 
     .如果真结束
     .如果 (关系节点组 [计数器1].节点图标大小 ＝ “”)
-        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbolSize”, , , 50)
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbolSize”, , , 50)
     .否则
-        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbolSize”, , , 到数值 (关系节点组 [计数器1].节点图标大小))
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].symbolSize”, , , 到数值 (关系节点组 [计数器1].节点图标大小))
     .如果结束
     .如果真 (关系节点组 [计数器1].节点是否固定 ＝ “1”)
-        json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].fixed”, , , , 真)
+        json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].fixed”, , , , 真)
     .如果真结束
     .计次循环首 (取数组成员数 (分类组), 计数器2)
         .如果真 (分类组 [计数器2] ＝ 关系节点组 [计数器1].节点名称)
@@ -1364,12 +1534,12 @@ json.置新值 (“series[0].lineStyle.normal.curveness”, , , 0)
         .如果真结束
 
     .计次循环尾 ()
-    json.置新值 (“series[0].data[” ＋ 到文本 (计数器1 － 1) ＋ “].category”, , , 计数器2 － 1)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data[” ＋ 到文本 (计数器1 － 1) ＋ “].category”, , , 计数器2 － 1)
 .计次循环尾 ()
 .计次循环首 (取数组成员数 (对应关系组), 计数器1)
-    json.置新值 (“series[0].links[” ＋ 到文本 (计数器1 － 1) ＋ “].value”, , 对应关系组 [计数器1].关系名称)
-    json.置新值 (“series[0].links[” ＋ 到文本 (计数器1 － 1) ＋ “].source”, , , 对应关系组 [计数器1].关系节点成员编号1 － 1)
-    json.置新值 (“series[0].links[” ＋ 到文本 (计数器1 － 1) ＋ “].target”, , , 对应关系组 [计数器1].关系节点成员编号2 － 1)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].links[” ＋ 到文本 (计数器1 － 1) ＋ “].value”, , 对应关系组 [计数器1].关系名称)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].links[” ＋ 到文本 (计数器1 － 1) ＋ “].source”, , , 对应关系组 [计数器1].关系节点成员编号1 － 1)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].links[” ＋ 到文本 (计数器1 － 1) ＋ “].target”, , , 对应关系组 [计数器1].关系节点成员编号2 － 1)
 .计次循环尾 ()
 
 .子程序 添加图形数据_树图, , 公开, 添加树图。
@@ -1383,73 +1553,76 @@ json.置新值 (“series[0].lineStyle.normal.curveness”, , , 0)
 .参数 底部留空距离, 整数型, 可空, 百分比，默认为12%
 .参数 左侧留空距离, 整数型, 可空, 百分比，默认为12%
 .参数 右侧留空距离, 整数型, 可空, 百分比，默认为12%
+.局部变量 索引, 整数型
 
-json.解析 (“{}”)
-json.置新值 (“series[0].type”, , “tree”)
-json.置新值 (“series[0].data”, “[” ＋ 树图json.取代码 () ＋ “]”)  ' 数据json必须照固定格式
-json.置新值 (“series[0].expandAndCollapse”, , , , 真)
-json.置新值 (“series[0].animationDuration”, , , 550)
-json.置新值 (“series[0].animationDurationUpdate”, , , 750)
+json.数组_加入成员 (“series”, “{}”)
+索引 ＝ json.数组_取长度 (“series”) － 1
+
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “tree”)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, “[” ＋ 树图json.取代码 () ＋ “]”)  ' 数据json必须照固定格式
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].expandAndCollapse”, , , , 真)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].animationDuration”, , , 550)
+json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].animationDurationUpdate”, , , 750)
 .如果 (是否为空 (初始展开层级))
-    json.置新值 (“series[0].initialTreeDepth”, , , 2)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].initialTreeDepth”, , , 2)
 .否则
-    json.置新值 (“series[0].initialTreeDepth”, , , 初始展开层级)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].initialTreeDepth”, , , 初始展开层级)
 .如果结束
 .如果 (是否为空 (展开方向) 或 展开方向 ＝ 0)
-    json.置新值 (“series[0].orient”, , “horizontal”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].orient”, , “horizontal”)
 .否则
-    json.置新值 (“series[0].orient”, , “vertical”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].orient”, , “vertical”)
 .如果结束
 .判断开始 (是否为空 (标记图形类型))
-    json.置新值 (“series[0].symbol”, , “emptyCircle”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “emptyCircle”)
 .判断 (标记图形类型 ＝ “0”)
-    json.置新值 (“series[0].symbol”, , “emptyCircle”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “emptyCircle”)
 .判断 (标记图形类型 ＝ “1”)
-    json.置新值 (“series[0].symbol”, , “circle”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “circle”)
 .判断 (标记图形类型 ＝ “2”)
-    json.置新值 (“series[0].symbol”, , “rect”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “rect”)
 .判断 (标记图形类型 ＝ “3”)
-    json.置新值 (“series[0].symbol”, , “roundRect”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “roundRect”)
 .判断 (标记图形类型 ＝ “4”)
-    json.置新值 (“series[0].symbol”, , “triangle”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “triangle”)
 .判断 (标记图形类型 ＝ “5”)
-    json.置新值 (“series[0].symbol”, , “diamond”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “diamond”)
 .判断 (标记图形类型 ＝ “6”)
-    json.置新值 (“series[0].symbol”, , “pin”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “pin”)
 .判断 (标记图形类型 ＝ “7”)
-    json.置新值 (“series[0].symbol”, , “arrow”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , “arrow”)
 .默认
-    json.置新值 (“series[0].symbol”, , 标记图形类型)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , 标记图形类型)
 .判断结束
 .如果 (是否为空 (标记图形大小))
-    json.置新值 (“series[0].symbolSize”, , , 7)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”, , , 7)
 .否则
-    json.置新值 (“series[0].symbolSize”, , , 标记图形大小)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”, , , 标记图形大小)
 .如果结束
 .如果 (是否为空 (顶部留空距离))
-    json.置新值 (“series[0].top”, , “12%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].top”, , “12%”)
 .否则
-    json.置新值 (“series[0].top”, , 到文本 (顶部留空距离) ＋ “%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].top”, , 到文本 (顶部留空距离) ＋ “%”)
 .如果结束
 .如果 (是否为空 (底部留空距离))
-    json.置新值 (“series[0].bottom”, , “12%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].bottom”, , “12%”)
 .否则
-    json.置新值 (“series[0].bottom”, , 到文本 (底部留空距离) ＋ “%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].bottom”, , 到文本 (底部留空距离) ＋ “%”)
 .如果结束
 .如果 (是否为空 (左侧留空距离))
-    json.置新值 (“series[0].left”, , “12%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].left”, , “12%”)
 .否则
-    json.置新值 (“series[0].left”, , 到文本 (左侧留空距离) ＋ “%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].left”, , 到文本 (左侧留空距离) ＋ “%”)
 .如果结束
 .如果 (是否为空 (右侧留空距离))
-    json.置新值 (“series[0].right”, , “12%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].right”, , “12%”)
 .否则
-    json.置新值 (“series[0].right”, , 到文本 (右侧留空距离) ＋ “%”)
+    json.置新值 (“series[” ＋ 到文本 (索引) ＋ “].right”, , 到文本 (右侧留空距离) ＋ “%”)
 .如果结束
 
 
 
-.子程序 添加标注线, , 公开, 添加标注线，多条标注线请重复调用添加。
+.子程序 添加标注线, 整数型, 公开, 添加标注线，多条标注线请重复调用添加。返回当前标注线索引
 .参数 json, eCharts_JSON类, 参考, 如果使用其他方式生成的json请先使用模块内置json类.解析()
 .参数 图形索引, 整数型, , 索引从0开始。
 .参数 起点标注类型, 整数型, 可空, 0：自定义（默认，且终点标注自动失效）；1：最小min；2：最大max；3：平均average
@@ -1470,48 +1643,58 @@ json.置新值 (“series[0].animationDurationUpdate”, , , 750)
     .判断 (起点标注类型 ＝ 3)
         起点类型 ＝ “average”
     .默认
-        返回 ()
+
     .判断结束
-    .如果真 (起点标注类型 ＝ 1 或 起点标注类型 ＝ 2 或 起点标注类型 ＝ 3)
+    .如果真 (起点类型 ≠ “”)
         json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markLine.data[” ＋ 到文本 (索引) ＋ “].type”, , 起点类型)
     .如果真结束
 
 .否则
-    .如果真 (起点标注类型 ＝ 0)
-        返回 ()
+    .如果真 (起点标注类型 ≠ 0)
+        索引 ＝ json.数组_加入成员 (“series[” ＋ 到文本 (图形索引) ＋ “].markLine.data”, “[]”) － 1
+        .判断开始 (起点标注类型 ＝ 1)
+            起点类型 ＝ “min”
+        .判断 (起点标注类型 ＝ 2)
+            起点类型 ＝ “max”
+        .判断 (起点标注类型 ＝ 3)
+            起点类型 ＝ “average”
+        .默认
+
+        .判断结束
+        .判断开始 (终点标注类型 ＝ 1)
+            终点类型 ＝ “min”
+        .判断 (终点标注类型 ＝ 2)
+            终点类型 ＝ “max”
+        .判断 (终点标注类型 ＝ 3)
+            终点类型 ＝ “average”
+        .默认
+
+        .判断结束
+        .如果真 (起点类型 ≠ “”)
+            json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markLine.data[” ＋ 到文本 (索引) ＋ “][0].type”, , 起点类型)
+        .如果真结束
+        .如果真 (终点类型 ≠ “”)
+            json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markLine.data[” ＋ 到文本 (索引) ＋ “][1].type”, , 终点类型)
+        .如果真结束
+
     .如果真结束
-    索引 ＝ json.数组_加入成员 (“series[” ＋ 到文本 (图形索引) ＋ “].markLine.data”, “[]”) － 1
-    .判断开始 (起点标注类型 ＝ 1)
-        起点类型 ＝ “min”
-    .判断 (起点标注类型 ＝ 2)
-        起点类型 ＝ “max”
-    .判断 (起点标注类型 ＝ 3)
-        起点类型 ＝ “average”
-    .默认
-        返回 ()
-    .判断结束
-    .判断开始 (终点标注类型 ＝ 1)
-        终点类型 ＝ “min”
-    .判断 (终点标注类型 ＝ 2)
-        终点类型 ＝ “max”
-    .判断 (终点标注类型 ＝ 3)
-        终点类型 ＝ “average”
-    .默认
-        返回 ()
-    .判断结束
-    json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markLine.data[” ＋ 到文本 (索引) ＋ “][0].type”, , 起点类型)
-    json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markLine.data[” ＋ 到文本 (索引) ＋ “][1].type”, , 终点类型)
+
 .如果结束
 
+返回 (索引)
 
-
-.子程序 添加标注点, , 公开, 添加标注点，多个标注点请重复调用添加。
+.子程序 添加标注点, 整数型, 公开, 添加标注点，多个标注点请重复调用添加。返回当前标注点索引
 .参数 json, eCharts_JSON类, 参考, 如果使用其他方式生成的json请先使用模块内置json类.解析()
 .参数 图形索引, 整数型, , 索引从0开始。
 .参数 标注类型, 整数型, 可空, 0：自定义（默认，且终点标注自动失效）；1：最小min；2：最大max；3：平均average
 .参数 标注点x轴位置, 文本型, 可空, 类型为0时有效，必须与x轴上的数据对应。
 .参数 标注点y轴位置, 双精度小数型, 可空, 类型为0时有效，可自由指定。
-.参数 标注值, 文本型, 可空, 类型为0时有效，省略将默认显示y轴位置值。
+.参数 标注文字, 文本型, 可空, 类型为0时有效，省略将默认显示y轴位置数值。
+.参数 标注文字颜色, 文本型, 可空
+.参数 标注点样式, 整数型, 可空, 默认为：6=大头针。可选：0=无，1=圆，2=矩形，3=圆角矩形，4=三角形，5=菱形，6=大头针，7=箭头
+.参数 标注点颜色, 文本型, 可空, 支持16进制颜色，也支持透明“transparent”（设标注点透明时需注意标注文字颜色，文字颜色默认是白色）
+.参数 标注点尺寸_宽, 整数型, 可空, 默认50，像素
+.参数 标注点尺寸_高, 整数型, 可空, 默认50，像素
 .局部变量 索引, 整数型
 .局部变量 类型, 文本型
 
@@ -1519,10 +1702,10 @@ json.置新值 (“series[0].animationDurationUpdate”, , , 750)
 .判断开始 (标注类型 ＝ 0)
     json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].coord[0]”, , 标注点x轴位置)
     json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].coord[1]”, , , 标注点y轴位置)
-    .如果 (是否为空 (标注值))
+    .如果 (是否为空 (标注文字))
         json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].value”, , 到文本 (标注点y轴位置))
     .否则
-        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].value”, , 标注值)
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].value”, , 标注文字)
     .如果结束
 
 .判断 (标注类型 ＝ 1)
@@ -1532,14 +1715,50 @@ json.置新值 (“series[0].animationDurationUpdate”, , , 750)
 .判断 (标注类型 ＝ 3)
     类型 ＝ “average”
 .默认
-    返回 ()
+
 .判断结束
-.如果真 (标注类型 ＝ 1 或 标注类型 ＝ 2 或 标注类型 ＝ 3)
+.如果真 (类型 ≠ “”)
     json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].type”, , 类型)
 .如果真结束
+.如果真 (是否为空 (标注点样式) ＝ 假)
+    .判断开始 (标注点样式 ＝ 0)  ' 无
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “none”)
+    .判断 (标注点样式 ＝ 1)  ' 圆
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “circle”)
+    .判断 (标注点样式 ＝ 2)  ' 矩形
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “rect”)
+    .判断 (标注点样式 ＝ 3)  ' 圆角矩形
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “roundRect”)
+    .判断 (标注点样式 ＝ 4)  ' 三角形
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “triangle”)
+    .判断 (标注点样式 ＝ 5)  ' 菱形
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “diamond”)
+    .判断 (标注点样式 ＝ 6)  ' 大头针
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “pin”)
+    .判断 (标注点样式 ＝ 7)  ' 箭头
+        json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbol”, , “arrow”)
+    .默认
 
+    .判断结束
 
-.子程序 添加标注区域, , 公开, 添加标注区域，多个标注区域请重复调用添加。
+.如果真结束
+.如果真 (是否为空 (标注文字颜色) ＝ 假)
+    json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].label.normal.textStyle.color”, , 标注文字颜色)
+.如果真结束
+.如果真 (是否为空 (标注点颜色) ＝ 假)
+    json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.data[” ＋ 到文本 (索引) ＋ “].itemStyle.normal.color”, , 标注点颜色)
+.如果真结束
+.判断开始 (是否为空 (标注点尺寸_宽) ＝ 假 且 是否为空 (标注点尺寸_高) ＝ 假)
+    json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbolSize”, “[” ＋ 到文本 (标注点尺寸_宽) ＋ “,” ＋ 到文本 (标注点尺寸_高) ＋ “]”)
+.判断 (是否为空 (标注点尺寸_宽) ＝ 假 且 是否为空 (标注点尺寸_高))
+    json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markPoint.symbolSize”, , , 标注点尺寸_宽)
+.默认
+
+.判断结束
+
+返回 (索引)
+
+.子程序 添加标注区域, 整数型, 公开, 添加标注区域，多个标注区域请重复调用添加。返回当前标注区域索引
 .参数 json, eCharts_JSON类, 参考, 如果使用其他方式生成的json请先使用模块内置json类.解析()
 .参数 图形索引, 整数型, , 索引从0开始。
 .参数 区域起点类型, 整数型, , 0：自定义坐标；1：最小min；2：最大max；3：平均average；4：以x轴为基准；5：以y轴为基准
@@ -1570,7 +1789,7 @@ json.置新值 (“series[0].animationDurationUpdate”, , , 750)
     .判断 (区域起点类型 ＝ 5)  ' y轴基准
         json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markArea.data[” ＋ 到文本 (索引) ＋ “][0].yAxis”, , , 区域起点参数2)
     .默认
-        返回 ()
+
     .判断结束
 
     .判断开始 (区域终点类型 ＝ 0)  ' 自定义坐标
@@ -1590,8 +1809,8 @@ json.置新值 (“series[0].animationDurationUpdate”, , , 750)
     .判断 (区域终点类型 ＝ 5)  ' y轴基准
         json.置新值 (“series[” ＋ 到文本 (图形索引) ＋ “].markArea.data[” ＋ 到文本 (索引) ＋ “][1].yAxis”, , , 区域终点参数2)
     .默认
-        返回 ()
+
     .判断结束
 
 .如果真结束
-
+返回 (索引)
