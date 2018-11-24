@@ -13,7 +13,7 @@
 * [讨论群](#qun)
 
 ***
-## 特别说明{#shuoming}
+### 特别说明{#shuoming}
 
 由于示例更新频繁并且示例的基础文件包稍大，所以不再上传源码，示例大全源码及基础文件包将保存在群文件中，需要的可以加群下载（群号：93902676），有问题也欢迎及时群内留言反馈。
 
@@ -125,9 +125,9 @@ K线图
 
    ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/1_6_5.png)
 
-   取到的数据：
+* 取到的数据：
 
-   ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/1_6_6.png)
+  ![](https://coding.net/u/lsy9202/p/E-echarts/git/raw/master/doc/img/1_6_6.png)
 
 * 修改数据
 
