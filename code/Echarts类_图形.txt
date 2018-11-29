@@ -947,7 +947,7 @@ eCharts_JSON类.置新值 (“radiusAxis[” ＋ 到文本 (索引) ＋ “].pol
 eCharts_JSON类.置新值 (“angleAxis[” ＋ 到文本 (索引) ＋ “].polarIndex”, , , 索引)
 返回 (索引)
 
-.子程序 设置组件_缩放, , 公开, 【dataZoom】，设置X轴或Y轴缩放组件。
+.子程序 设置组件_缩放, , 公开, 【dataZoom】，设置X轴或Y轴缩放组件。X、Y缩放组件全开时的索引顺序是[x外,x内,y外,y内]。
 .参数 开启X轴缩放条, 逻辑型, 可空, 【inside.disabled】，真为开启，假为不开启。默认开启
 .参数 开启Y轴缩放条, 逻辑型, 可空, 【inside.disabled】，真为开启，假为不开启。默认不开启
 .参数 开启X轴拖动及鼠标缩放, 逻辑型, 可空, 【slider.show】，真为开启，假为不开启。默认随X轴缩放条开关
@@ -970,6 +970,8 @@ eCharts_JSON类.置新值 (“angleAxis[” ＋ 到文本 (索引) ＋ “].pola
 .参数 y轴缩放条_下, 文本型, 可空, 【bottom】，默认为“auto”，组件距离容器下侧的距离。可选百分比“20%”或像素值“20px”。
 .参数 数据过滤模式_x轴, 整数型, 可空, 【inside/slider.filterMode】，默认：0=filter。缩放时对视窗外的数据的过滤模式。可选：0=filter，1=weakFilter，2=empty，3=none（不过滤数据，只改变数轴范围）。其他参数说明详见：http://www.echartsjs.com/option.html#dataZoom-slider.filterMode
 .参数 数据过滤模式_y轴, 整数型, 可空, 【inside/slider.filterMode】，默认：0=filter。参数范围同上。
+.参数 要绑定极坐标轴轴索引, 整数型, 可空, 【radiusAxisIndex/angleAxisIndex】，留空不绑定，使用极坐标轴时即使只有一个极坐标轴也要手动指定。
+.参数 缩放条_宽度, 双精度小数型, 可空, 【width/height】，默认30
 .局部变量 临时数组, 整数型, , "0"
 .局部变量 计数器, 整数型
 .局部变量 x_start, 整数型
@@ -1029,6 +1031,20 @@ eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组
 .如果真 (是否为空 (x轴缩放条_下) ＝ 假)
     eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].bottom”, , x轴缩放条_下)
 .如果真结束
+' 要绑定极坐标轴轴索引
+.如果 (是否为空 (要绑定极坐标轴轴索引))
+    eCharts_JSON类.删除 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”)
+    eCharts_JSON类.删除 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”)
+.否则
+    eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”, , , 要绑定极坐标轴轴索引)
+    eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”, , , 要绑定极坐标轴轴索引)
+.如果结束
+' 缩放条_宽度
+.如果 (是否为空 (缩放条_宽度))
+    eCharts_JSON类.删除 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].height”)
+.否则
+    eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].height”, , , 缩放条_宽度)
+.如果结束
 
 .如果真 (是否为空 (开启X轴拖动及鼠标缩放) ＝ 假 或 开启X轴缩放条)
     eCharts_JSON类.数组_加入成员 (“dataZoom”, “{}”)
@@ -1088,6 +1104,15 @@ eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组
 
     .如果真结束
 
+    ' 要绑定极坐标轴轴索引
+    .如果 (是否为空 (要绑定极坐标轴轴索引))
+        eCharts_JSON类.删除 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”)
+        删除 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”)
+    .否则
+        eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”, , , 要绑定极坐标轴轴索引)
+        置新值 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”, , , 要绑定极坐标轴轴索引)
+    .如果结束
+
 .如果真结束
 
 .如果真 (开启Y轴缩放条)
@@ -1114,6 +1139,21 @@ eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组
     .如果真 (是否为空 (y轴缩放条_下) ＝ 假)
         eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].bottom”, , y轴缩放条_下)
     .如果真结束
+
+    ' 要绑定极坐标轴轴索引
+    .如果 (是否为空 (要绑定极坐标轴轴索引))
+        eCharts_JSON类.删除 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”)
+        删除 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”)
+    .否则
+        eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”, , , 要绑定极坐标轴轴索引)
+        置新值 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”, , , 要绑定极坐标轴轴索引)
+    .如果结束
+    ' 缩放条_宽度
+    .如果 (是否为空 (缩放条_宽度))
+        删除 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].width”)
+    .否则
+        置新值 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].width”, , , 缩放条_宽度)
+    .如果结束
 
 .如果真结束
 
@@ -1174,6 +1214,15 @@ eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组
         .判断结束
 
     .如果真结束
+
+    ' 要绑定极坐标轴轴索引
+    .如果 (是否为空 (要绑定极坐标轴轴索引))
+        eCharts_JSON类.删除 (“dataZoom[” ＋ 到文本 (eCharts_JSON类.数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”)
+        删除 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”)
+    .否则
+        eCharts_JSON类.置新值 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].radiusAxisIndex”, , , 要绑定极坐标轴轴索引)
+        置新值 (“dataZoom[” ＋ 到文本 (数组_取长度 (“dataZoom”) － 1) ＋ “].angleAxisIndex”, , , 要绑定极坐标轴轴索引)
+    .如果结束
 
 .如果真结束
 
