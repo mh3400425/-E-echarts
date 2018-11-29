@@ -2144,7 +2144,12 @@ eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”
     eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].labelLine.normal.show”, , , , 是否显示引导标线)
 .如果真结束
 .如果真 (是否为空 (是否南丁格尔图) ＝ 假)
-    eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].roseType”, , 是否南丁格尔图)
+    .如果 (是否南丁格尔图 ＝ “false”)
+        eCharts_JSON类.删除 (“series[” ＋ 到文本 (索引) ＋ “].roseType”)
+    .否则
+        eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].roseType”, , 是否南丁格尔图)
+    .如果结束
+
 .如果真结束
 .如果真 (是否为空 (圆心坐标_横) ＝ 假 且 是否为空 (圆心坐标_纵) ＝ 假)
     参数 ＝ “[参数1,参数2]”
