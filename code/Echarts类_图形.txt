@@ -1532,10 +1532,10 @@ eCharts_JSON类.置新值 (“tooltip.show”, , , , 开启还是关闭)
 .参数 反转显示, 逻辑型, 可空, 【inverse】，水平或者垂直反转显示。
 .参数 宽度, 双精度小数型, 可空, 【itemWidth】，默认20，控制条宽度。
 .参数 高度, 双精度小数型, 可空, 【itemHeight】，默认140，控制条高度。
-.参数 左, 文本型, 可空, 【left】，默认：“10%”。grid组件距离容器左侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
-.参数 右, 文本型, 可空, 【right】，默认：“10%”。grid组件距离容器右侧的距离。本参数可支持像素值、百分比。
-.参数 上, 文本型, 可空, 【top】，默认：“60px”。grid组件距离容器上侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
-.参数 下, 文本型, 可空, 【bottom】，默认：“60px”。grid组件距离容器底部的距离。本参数可支持像素值、百分比。
+.参数 左, 文本型, 可空, 【left】，默认：“0”。组件距离容器左侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
+.参数 右, 文本型, 可空, 【right】，默认：“auto”。组件距离容器右侧的距离。本参数可支持像素值、百分比。
+.参数 上, 文本型, 可空, 【top】，默认：“auto”。组件距离容器上侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
+.参数 下, 文本型, 可空, 【bottom】，默认：“0”。组件距离容器底部的距离。本参数可支持像素值、百分比。
 .参数 绑定的图形索引, 整数型, 可空 数组, 【seriesIndex】，接受整数型数组，默认绑定全部系列，索引从0开始。
 .参数 两端的文本, 文本型, 可空 数组, 【text】，接受文本型数组，成员数>=2,前两个成员将分别表示min和max端文本，例如：{"高","低"}
 .参数 最大值, 双精度小数型, 可空, 【max】
@@ -1804,6 +1804,127 @@ eCharts_JSON类.置新值 (“tooltip.show”, , , , 开启还是关闭)
         eCharts_JSON类.置新值 (“toolbox.bottom”, , 下)
     .如果结束
 
+.如果结束
+
+
+.子程序 设置组件_地理坐标系, , 公开, 【geo】，地理坐标系组件用于地图的绘制，支持在地理坐标系上绘制散点图、线集。
+.参数 地图名称, 文本型, , 【map】，地图类型，地图数据需自行引入。地图数据为geoJSON格式。
+.参数 开启鼠标控制, 逻辑型, 可空, 【roam】，默认假=不开启
+.参数 中心位置_经度, 双精度小数型, 可空, 【center】，留空时地图将居中显示，本参数需与‘中心位置_纬度’同时设置。
+.参数 中心位置_纬度, 双精度小数型, 可空, 【center】，留空时地图将居中显示，本参数需与‘中心位置_经度’同时设置。
+.参数 缩放比例, 双精度小数型, 可空, 【zoom】，默认为1
+.参数 缩放比例_最大, 双精度小数型, 可空, 【scaleLimit.max】
+.参数 缩放比例_最小, 双精度小数型, 可空, 【scaleLimit.min】
+.参数 文本标签_开启, 逻辑型, 可空, 【label.normal.show】，默认假=关闭
+.参数 文本标签_大小, 双精度小数型, 可空, 【label.normal.fontSize】，默认12
+.参数 文本标签_颜色, 文本型, 可空, 【label.normal.color】，默认#fff，支持16进制颜色等。
+.参数 文本标签_背景颜色, 文本型, 可空, 【label.normal.backgroundColor】，默认透明“transparent”
+.参数 地图区域_颜色, 文本型, 可空, 【itemStyle.normal.areaColor】，默认“#eee”，支持16进制颜色等。
+.参数 地图区域_描边颜色, 文本型, 可空, 【itemStyle.normal.borderColor】，默认“#000”，支持16进制颜色等。
+.参数 地图区域_描边宽度, 双精度小数型, 可空, 【itemStyle.normal.borderWidth】，默认0
+.参数 左, 文本型, 可空, 【left】，默认：“auto”。组件距离容器左侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
+.参数 右, 文本型, 可空, 【right】，默认：“auto”。组件距离容器右侧的距离。本参数可支持像素值、百分比。
+.参数 上, 文本型, 可空, 【top】，默认：“auto”。组件距离容器上侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
+.参数 下, 文本型, 可空, 【bottom】，默认：“auto”。组件距离容器底部的距离。本参数可支持像素值、百分比。
+.局部变量 临时文本, 文本型
+
+' 地图名称
+eCharts_JSON类.置新值 (“geo.map”, , 地图名称)
+' 开启鼠标控制
+.如果 (是否为空 (开启鼠标控制))
+    eCharts_JSON类.删除 (“geo.roam”)
+.否则
+    eCharts_JSON类.置新值 (“geo.roam”, , , , 开启鼠标控制)
+.如果结束
+' 中心位置_经度
+' 中心位置_纬度
+.如果真 (是否为空 (中心位置_经度) ＝ 假 且 是否为空 (中心位置_纬度) ＝ 假)
+    临时文本 ＝ “[” ＋ 到文本 (中心位置_经度) ＋ “,” ＋ 到文本 (中心位置_纬度) ＋ “]”
+    eCharts_JSON类.置新值 (“geo.center”, 临时文本)
+.如果真结束
+' 缩放比例
+.如果 (是否为空 (缩放比例))
+    eCharts_JSON类.删除 (“geo.zoom”)
+.否则
+    eCharts_JSON类.置新值 (“geo.zoom”, , , 缩放比例)
+.如果结束
+' 缩放比例_最大
+.如果 (是否为空 (缩放比例_最大))
+    eCharts_JSON类.删除 (“geo.scaleLimit.max”)
+.否则
+    eCharts_JSON类.置新值 (“geo.scaleLimit.max”, , , 缩放比例_最大)
+.如果结束
+' 缩放比例_最小
+.如果 (是否为空 (缩放比例_最小))
+    eCharts_JSON类.删除 (“geo.scaleLimit.min”)
+.否则
+    eCharts_JSON类.置新值 (“geo.scaleLimit.min”, , , 缩放比例_最小)
+.如果结束
+' 文本标签_开启
+.如果 (是否为空 (文本标签_开启))
+    eCharts_JSON类.删除 (“geo.label.normal.show”)
+.否则
+    eCharts_JSON类.置新值 (“geo.label.normal.show”, , , , 文本标签_开启)
+.如果结束
+' 文本标签_大小
+.如果 (是否为空 (文本标签_大小))
+    eCharts_JSON类.删除 (“geo.label.normal.fontSize”)
+.否则
+    eCharts_JSON类.置新值 (“geo.label.normal.fontSize”, , , 文本标签_大小)
+.如果结束
+' 文本标签_颜色
+.如果 (是否为空 (文本标签_颜色))
+    eCharts_JSON类.删除 (“geo.label.normal.color”)
+.否则
+    eCharts_JSON类.置新值 (“geo.label.normal.color”, , 文本标签_颜色)
+.如果结束
+' 文本标签_背景颜色
+.如果 (是否为空 (文本标签_背景颜色))
+    eCharts_JSON类.删除 (“geo.label.normal.backgroundColor”)
+.否则
+    eCharts_JSON类.置新值 (“geo.label.normal.backgroundColor”, , 文本标签_背景颜色)
+.如果结束
+' 地图区域_颜色
+.如果 (是否为空 (地图区域_颜色))
+    eCharts_JSON类.删除 (“geo.itemStyle.normal.areaColor”)
+.否则
+    eCharts_JSON类.置新值 (“geo.itemStyle.normal.areaColor”, , 地图区域_颜色)
+.如果结束
+' 地图区域_描边颜色
+.如果 (是否为空 (地图区域_描边颜色))
+    eCharts_JSON类.删除 (“geo.itemStyle.normal.borderColor”)
+.否则
+    eCharts_JSON类.置新值 (“geo.itemStyle.normal.borderColor”, , 地图区域_描边颜色)
+.如果结束
+' 地图区域_描边宽度
+.如果 (是否为空 (地图区域_描边宽度))
+    eCharts_JSON类.删除 (“geo.itemStyle.normal.borderWidth”)
+.否则
+    eCharts_JSON类.置新值 (“geo.itemStyle.normal.borderWidth”, , , 地图区域_描边宽度)
+.如果结束
+' 左
+.如果 (是否为空 (左))
+    eCharts_JSON类.删除 (“geo.left”)
+.否则
+    eCharts_JSON类.置新值 (“geo.left”, , 左)
+.如果结束
+' 右
+.如果 (是否为空 (右))
+    eCharts_JSON类.删除 (“geo.right”)
+.否则
+    eCharts_JSON类.置新值 (“geo.right”, , 右)
+.如果结束
+' 上
+.如果 (是否为空 (上))
+    eCharts_JSON类.删除 (“geo.top”)
+.否则
+    eCharts_JSON类.置新值 (“geo.top”, , 上)
+.如果结束
+' 下
+.如果 (是否为空 (下))
+    eCharts_JSON类.删除 (“geo.bottom”)
+.否则
+    eCharts_JSON类.置新值 (“geo.bottom”, , 下)
 .如果结束
 
 
