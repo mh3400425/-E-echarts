@@ -1815,7 +1815,7 @@ eCharts_JSON类.置新值 (“tooltip.show”, , , , 开启还是关闭)
 .参数 缩放比例, 双精度小数型, 可空, 【zoom】，默认为1
 .参数 缩放比例_最大, 双精度小数型, 可空, 【scaleLimit.max】
 .参数 缩放比例_最小, 双精度小数型, 可空, 【scaleLimit.min】
-.参数 文本标签_开启, 逻辑型, 可空, 【label.normal.show】，默认假=关闭
+.参数 文本标签_开启逻辑, 整数型, 可空, 【label.show】，【可用常量：#文字标签显示逻辑_***】，0=关闭文字标签，1=常开显示文字标签，2=鼠标经过时显示文字标签
 .参数 文本标签_大小, 双精度小数型, 可空, 【label.normal.fontSize】，默认12
 .参数 文本标签_颜色, 文本型, 可空, 【label.normal.color】，默认#fff，支持16进制颜色等。
 .参数 文本标签_背景颜色, 文本型, 可空, 【label.normal.backgroundColor】，默认透明“transparent”
@@ -1860,29 +1860,48 @@ eCharts_JSON类.置新值 (“geo.map”, , 地图名称)
 .否则
     eCharts_JSON类.置新值 (“geo.scaleLimit.min”, , , 缩放比例_最小)
 .如果结束
-' 文本标签_开启
-.如果 (是否为空 (文本标签_开启))
+' 文本标签_开启逻辑
+.如果 (是否为空 (文本标签_开启逻辑))
     eCharts_JSON类.删除 (“geo.label.normal.show”)
+    删除 (“geo.label.emphasis.show”)
 .否则
-    eCharts_JSON类.置新值 (“geo.label.normal.show”, , , , 文本标签_开启)
+    .判断开始 (文本标签_开启逻辑 ＝ 0)  ' 关闭文字标签
+        eCharts_JSON类.置新值 (“geo.label.normal.show”, , , , 假)
+        置新值 (“geo.label.emphasis.show”, , , , 假)
+    .判断 (文本标签_开启逻辑 ＝ 1)  ' 常开文字标签
+        置新值 (“geo.label.normal.show”, , , , 真)
+        置新值 (“geo.label.emphasis.show”, , , , 真)
+    .判断 (文本标签_开启逻辑 ＝ 2)  ' 鼠标经过时显示文字标签
+        置新值 (“geo.label.normal.show”, , , , 假)
+        置新值 (“geo.label.emphasis.show”, , , , 真)
+    .默认
+
+    .判断结束
+
 .如果结束
 ' 文本标签_大小
 .如果 (是否为空 (文本标签_大小))
     eCharts_JSON类.删除 (“geo.label.normal.fontSize”)
+    eCharts_JSON类.删除 (“geo.label.emphasis.fontSize”)
 .否则
     eCharts_JSON类.置新值 (“geo.label.normal.fontSize”, , , 文本标签_大小)
+    eCharts_JSON类.置新值 (“geo.label.emphasis.fontSize”, , , 文本标签_大小)
 .如果结束
 ' 文本标签_颜色
 .如果 (是否为空 (文本标签_颜色))
     eCharts_JSON类.删除 (“geo.label.normal.color”)
+    eCharts_JSON类.删除 (“geo.label.emphasis.color”)
 .否则
     eCharts_JSON类.置新值 (“geo.label.normal.color”, , 文本标签_颜色)
+    eCharts_JSON类.置新值 (“geo.label.emphasis.color”, , 文本标签_颜色)
 .如果结束
 ' 文本标签_背景颜色
 .如果 (是否为空 (文本标签_背景颜色))
     eCharts_JSON类.删除 (“geo.label.normal.backgroundColor”)
+    eCharts_JSON类.删除 (“geo.label.emphasis.backgroundColor”)
 .否则
     eCharts_JSON类.置新值 (“geo.label.normal.backgroundColor”, , 文本标签_背景颜色)
+    eCharts_JSON类.置新值 (“geo.label.emphasis.backgroundColor”, , 文本标签_背景颜色)
 .如果结束
 ' 地图区域_颜色
 .如果 (是否为空 (地图区域_颜色))
@@ -2365,7 +2384,7 @@ eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”
 .参数 散点_图形, 文本型, 可空, 【symbol】，【可选常量：#常用符号_***】，默认：圆形circle。除常量中8种图形，同时支持“image://url”格式的图片或图片数据，也支持“path://”开头格式的矢量路径SVG图形。
 .参数 散点_颜色, 文本型, 可空, 【itemStyle.color】，默认自适应，16进制颜色，支持透明“transparent”
 .参数 散点_阴影颜色, 文本型, 可空, 【itemStyle.shadowColor】，默认为空
-.参数 散点_大小, 双精度小数型, 可空 数组, 【symbolSize】，接受双精度小数数组，支持js回调函数，数组前两个成员分别表示宽和高，仅一个成员时表示宽高相同，数组其他成员将忽略。
+.参数 散点_大小, 文本型, 可空, 【symbolSize】，接受双精度小数（转文本），支持js回调函数，数组前两个成员分别表示宽和高，仅一个成员时表示宽高相同，数组其他成员将忽略。
 .参数 散点_角度, 双精度小数型, 可空, 【symbolRotate】
 .参数 散点_位置偏移_横向, 文本型, 可空, 【symbolOffset】，留空将默认居中，接受百分比（散点图形宽的百分比）。
 .参数 散点_位置偏移_纵向, 文本型, 可空, 【symbolOffset】，留空将默认居中，接受百分比（散点图形高的百分比）。例如图形为大头针时设置“50%”将修正大头针下边针尖位置为数据坐标位置。
@@ -2376,8 +2395,9 @@ eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”
 .参数 绑定x轴索引, 整数型, 可空, 【xAxisIndex】，留空将自动绑定索引为0的x轴。
 .参数 绑定y轴索引, 整数型, 可空, 【yAxisIndex】，留空将自动绑定索引为0的y轴。
 .参数 坐标系类型, 文本型, 可空, 【coordinateSystem】，留空默认使用直角坐标系“cartesian2d”，【可选常量：#坐标系类型_**】
-.参数 绑定地理坐标系索引, 整数型, 可空, 【geoIndex】，注意：留空将不设定。仅有一个地理坐标系时请填0，多个坐标系存在请填写正确坐标系索引。
-.参数 绑定日历坐标系索引, 整数型, 可空, 【calendarIndex】，注意：留空将不设定。仅有一个日历坐标系时请填0，多个坐标系存在请填写正确坐标系索引。
+.参数 绑定地理坐标系索引, 整数型, 可空, 【geoIndex】，请正确设定坐标系类型，唯一坐标系时本参数可省略，多个坐标系存在请填写正确坐标系索引。
+.参数 绑定日历坐标系索引, 整数型, 可空, 【calendarIndex】，请正确设定坐标系类型，唯一坐标系时本参数可省略，多个坐标系存在请填写正确坐标系索引。
+.参数 绑定极坐标系索引, 整数型, 可空, 【polarIndex】，请正确设定坐标系类型，唯一坐标系时本参数可省略，多个坐标系存在请填写正确坐标系索引。
 .局部变量 索引, 整数型
 .局部变量 计数器, 整数型
 .局部变量 位置偏移, 文本型
@@ -2466,14 +2486,7 @@ eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”
 .如果 (是否为空 (散点_大小))
     eCharts_JSON类.删除 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”)
 .否则
-    .判断开始 (取数组成员数 (散点_大小) ＝ 1)
-        eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”, , , 散点_大小 [1])
-    .判断 (取数组成员数 (散点_大小) ≥ 2)
-        eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”, “[” ＋ 到文本 (散点_大小 [1]) ＋ “,” ＋ 到文本 (散点_大小 [2]) ＋ “]”)
-    .默认
-
-    .判断结束
-
+    eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”, 散点_大小)
 .如果结束
 ' 散点_角度【symbolRotate】
 .如果 (是否为空 (散点_角度))
@@ -2551,6 +2564,12 @@ eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”
     eCharts_JSON类.删除 (“series[” ＋ 到文本 (索引) ＋ “].calendarIndex”)
 .否则
     eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].calendarIndex”, , , 绑定日历坐标系索引)
+.如果结束
+' 绑定极坐标系索引
+.如果 (是否为空 (绑定极坐标系索引))
+    eCharts_JSON类.删除 (“series[” ＋ 到文本 (索引) ＋ “].polarIndex”)
+.否则
+    eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].polarIndex”, , , 绑定极坐标系索引)
 .如果结束
 返回 (索引)
 
@@ -3086,6 +3105,326 @@ eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].animati
 
 
 
+.子程序 添加图形数据_地图, 整数型, 公开, 【series-map】，添加一组地图数据。返回当前地图数据索引。
+.参数 系列名称, 文本型, 可空, 【name】，用于tooltip的显示，legend的图例筛选。
+.参数 数据组, 文本型, 可空, 【data】，json格式地图数据组。
+.参数 地图类型, 文本型, 可空, 【map】，使用geo地理坐标系组件设定地图后本参数可省略。
+.参数 开启鼠标控制, 逻辑型, 可空, 【roam】，默认假=不开启
+.参数 中心位置_经度, 双精度小数型, 可空, 【center】，留空时地图将居中显示，本参数需与‘中心位置_纬度’同时设置。
+.参数 中心位置_纬度, 双精度小数型, 可空, 【center】，留空时地图将居中显示，本参数需与‘中心位置_经度’同时设置。
+.参数 缩放比例, 双精度小数型, 可空, 【zoom】，默认为1
+.参数 缩放比例_最大, 双精度小数型, 可空, 【scaleLimit.max】
+.参数 缩放比例_最小, 双精度小数型, 可空, 【scaleLimit.min】
+.参数 文本标签_开启逻辑, 整数型, 可空, 【label.show】，【可用常量：#文字标签显示逻辑_***】，0=关闭文字标签，1=常开显示文字标签，2=鼠标经过时显示文字标签
+.参数 文本标签_大小, 双精度小数型, 可空, 【label.normal.fontSize】，默认12
+.参数 文本标签_颜色, 文本型, 可空, 【label.normal.color】，默认#fff，支持16进制颜色等。
+.参数 文本标签_背景颜色, 文本型, 可空, 【label.normal.backgroundColor】，默认透明“transparent”
+.参数 地图区域_颜色, 文本型, 可空, 【itemStyle.normal.areaColor】，默认“#eee”，支持16进制颜色等。
+.参数 地图区域_描边颜色, 文本型, 可空, 【itemStyle.normal.borderColor】，默认“#000”，支持16进制颜色等。
+.参数 地图区域_描边宽度, 双精度小数型, 可空, 【itemStyle.normal.borderWidth】，默认0
+.参数 左, 文本型, 可空, 【left】，默认：“auto”。组件距离容器左侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
+.参数 右, 文本型, 可空, 【right】，默认：“auto”。组件距离容器右侧的距离。本参数可支持像素值、百分比。
+.参数 上, 文本型, 可空, 【top】，默认：“auto”。组件距离容器上侧的距离。本参数可支持像素值、百分比或“top”、“middle”或“bottom”。
+.参数 下, 文本型, 可空, 【bottom】，默认：“auto”。组件距离容器底部的距离。本参数可支持像素值、百分比。
+.参数 地理坐标系索引, 整数型, 可空, 【geoIndex】，未设置geo组件时map series会生成内部自己专用的geo组件，如果指定了地理坐标系索引时series-map.map以及series-map.itemStyle等配置将使用geo组件中的设置。
+.局部变量 索引, 整数型
+.局部变量 路径, 文本型
+.局部变量 临时文本, 文本型
+
+索引 ＝ eCharts_JSON类.数组_取长度 (“series”)
+路径 ＝ “series[” ＋ 到文本 (索引) ＋ “].”
+eCharts_JSON类.置新值 (路径 ＋ “type”, , “map”)
+' 系列名称
+.如果 (是否为空 (系列名称))
+    eCharts_JSON类.删除 (路径 ＋ “name”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “name”, , 系列名称)
+.如果结束
+' 数据组
+.如果 (是否为空 (数据组))
+    eCharts_JSON类.删除 (路径 ＋ “data”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “data”, 数据组)
+.如果结束
+' 地图类型
+.如果 (是否为空 (地图类型))
+    eCharts_JSON类.删除 (路径 ＋ “map”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “map”, , 地图类型)
+.如果结束
+' 开启鼠标控制
+.如果 (是否为空 (开启鼠标控制))
+    eCharts_JSON类.删除 (路径 ＋ “roam”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “roam”, , , , 开启鼠标控制)
+.如果结束
+' 中心位置_经度
+' 中心位置_纬度
+.如果真 (是否为空 (中心位置_经度) ＝ 假 且 是否为空 (中心位置_纬度) ＝ 假)
+    临时文本 ＝ “[” ＋ 到文本 (中心位置_经度) ＋ “,” ＋ 到文本 (中心位置_纬度) ＋ “]”
+    eCharts_JSON类.置新值 (路径 ＋ “center”, 临时文本)
+.如果真结束
+' 缩放比例
+.如果 (是否为空 (缩放比例))
+    eCharts_JSON类.删除 (路径 ＋ “zoom”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “zoom”, , , 缩放比例)
+.如果结束
+' 缩放比例_最大
+.如果 (是否为空 (缩放比例_最大))
+    eCharts_JSON类.删除 (路径 ＋ “scaleLimit.max”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “scaleLimit.max”, , , 缩放比例_最大)
+.如果结束
+' 缩放比例_最小
+.如果 (是否为空 (缩放比例_最小))
+    eCharts_JSON类.删除 (路径 ＋ “scaleLimit.min”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “scaleLimit.min”, , , 缩放比例_最小)
+.如果结束
+' 文本标签_开启逻辑
+.如果 (是否为空 (文本标签_开启逻辑))
+    eCharts_JSON类.删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”)
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”)
+.否则
+    .判断开始 (文本标签_开启逻辑 ＝ 0)  ' 关闭文字标签
+        eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”, , , , 假)
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”, , , , 假)
+    .判断 (文本标签_开启逻辑 ＝ 1)  ' 常开文字标签
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”, , , , 真)
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”, , , , 真)
+    .判断 (文本标签_开启逻辑 ＝ 2)  ' 鼠标经过时显示文字标签
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”, , , , 假)
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”, , , , 真)
+    .默认
+
+    .判断结束
+
+.如果结束
+' 文本标签_大小
+.如果 (是否为空 (文本标签_大小))
+    eCharts_JSON类.删除 (路径 ＋ “label.normal.fontSize”)
+    eCharts_JSON类.删除 (路径 ＋ “label.emphasis.fontSize”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “label.normal.fontSize”, , , 文本标签_大小)
+    eCharts_JSON类.置新值 (路径 ＋ “label.emphasis.fontSize”, , , 文本标签_大小)
+.如果结束
+' 文本标签_颜色
+.如果 (是否为空 (文本标签_颜色))
+    eCharts_JSON类.删除 (路径 ＋ “label.normal.color”)
+    eCharts_JSON类.删除 (路径 ＋ “label.emphasis.color”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “label.normal.color”, , 文本标签_颜色)
+    eCharts_JSON类.置新值 (路径 ＋ “label.emphasis.color”, , 文本标签_颜色)
+.如果结束
+' 文本标签_背景颜色
+.如果 (是否为空 (文本标签_背景颜色))
+    eCharts_JSON类.删除 (路径 ＋ “label.normal.backgroundColor”)
+    eCharts_JSON类.删除 (路径 ＋ “label.emphasis.backgroundColor”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “label.normal.backgroundColor”, , 文本标签_背景颜色)
+    eCharts_JSON类.置新值 (路径 ＋ “label.emphasis.backgroundColor”, , 文本标签_背景颜色)
+.如果结束
+' 地图区域_颜色
+.如果 (是否为空 (地图区域_颜色))
+    eCharts_JSON类.删除 (路径 ＋ “itemStyle.normal.areaColor”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “itemStyle.normal.areaColor”, , 地图区域_颜色)
+.如果结束
+' 地图区域_描边颜色
+.如果 (是否为空 (地图区域_描边颜色))
+    eCharts_JSON类.删除 (路径 ＋ “itemStyle.normal.borderColor”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “itemStyle.normal.borderColor”, , 地图区域_描边颜色)
+.如果结束
+' 地图区域_描边宽度
+.如果 (是否为空 (地图区域_描边宽度))
+    eCharts_JSON类.删除 (路径 ＋ “itemStyle.normal.borderWidth”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “itemStyle.normal.borderWidth”, , , 地图区域_描边宽度)
+.如果结束
+' 左
+.如果 (是否为空 (左))
+    eCharts_JSON类.删除 (路径 ＋ “left”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “left”, , 左)
+.如果结束
+' 右
+.如果 (是否为空 (右))
+    eCharts_JSON类.删除 (路径 ＋ “right”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “right”, , 右)
+.如果结束
+' 上
+.如果 (是否为空 (上))
+    eCharts_JSON类.删除 (路径 ＋ “top”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “top”, , 上)
+.如果结束
+' 下
+.如果 (是否为空 (下))
+    eCharts_JSON类.删除 (路径 ＋ “bottom”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “bottom”, , 下)
+.如果结束
+' 地理坐标系索引
+.如果 (是否为空 (地理坐标系索引))
+    eCharts_JSON类.删除 (路径 ＋ “geoIndex”)
+.否则
+    eCharts_JSON类.置新值 (路径 ＋ “geoIndex”, , , 地理坐标系索引)
+.如果结束
+返回 (索引)
+
+.子程序 添加图形数据_特效散点图, 整数型, 公开, 【series-effectScatter】，添加一组带涟漪特效动画的散点（气泡）图。返回当前图形索引。
+.参数 系列名称, 文本型, , 【name】，用于tooltip的显示和legend图例筛选。
+.参数 数据组, 文本型, , 【data】，json格式二维坐标数组。
+.参数 文字标签_显示逻辑, 整数型, 可空, 【label.show】，【可选常量：#文字标签显示逻辑_***】，0=关闭文字标签，1=常开显示文字标签，2=鼠标经过时显示文字标签
+.参数 文字标签_显示位置, 文本型, 可空, 【label.normal.position】，【可选常量：#文字标签位置_***】
+.参数 文字标签_角度, 双精度小数型, 可空, 【label.normal.rotate】
+.参数 文字标签_文本格式器, 文本型, 可空, 【label.normal.formatter】，为空时默认显示原始数值，格式支持字符串模板和js回调函数。例如：“第 {value} 个”。
+.参数 文字标签_颜色, 文本型, 可空, 【label.normal.color】，支持16进制颜色，默认：“#ffffff”
+.参数 文字标签_大小, 双精度小数型, 可空, 【label.normal.fontSize】，默认12
+.参数 文字标签_背景颜色, 文本型, 可空, 【label.normal.backgroundColor】，默认透明“transparent”，支持16进制颜色和rgba颜色，例如“#124a4e”和“rgba(0,255,255,0.6)”，注：rgba颜色0.6为透明度，取值0~1.0
+.参数 散点_图形, 文本型, 可空, 【symbol】，【可选常量：#常用符号_***】，默认：圆形circle。除常量中8种图形，同时支持“image://url”格式的图片或图片数据，也支持“path://”开头格式的矢量路径SVG图形。
+.参数 散点_颜色, 文本型, 可空, 【itemStyle.color】，默认自适应，16进制颜色，支持透明“transparent”
+.参数 散点_阴影颜色, 文本型, 可空, 【itemStyle.shadowColor】，默认为空
+.参数 散点_大小, 文本型, 可空, 【symbolSize】，接受双精度小数（转文本），支持js回调函数，数组前两个成员分别表示宽和高，仅一个成员时表示宽高相同，数组其他成员将忽略。
+.参数 散点_角度, 双精度小数型, 可空, 【symbolRotate】
+.参数 绑定x轴索引, 整数型, 可空, 【xAxisIndex】，留空将自动绑定索引为0的x轴。
+.参数 绑定y轴索引, 整数型, 可空, 【yAxisIndex】，留空将自动绑定索引为0的y轴。
+.参数 坐标系类型, 文本型, 可空, 【coordinateSystem】，留空默认使用直角坐标系“cartesian2d”，【可选常量：#坐标系类型_**】
+.参数 绑定地理坐标系索引, 整数型, 可空, 【geoIndex】，请正确设定坐标系类型，唯一坐标系时本参数可省略，多个坐标系存在请填写正确坐标系索引。
+.参数 绑定日历坐标系索引, 整数型, 可空, 【calendarIndex】，请正确设定坐标系类型，唯一坐标系时本参数可省略，多个坐标系存在请填写正确坐标系索引。
+.参数 绑定极坐标系索引, 整数型, 可空, 【polarIndex】，请正确设定坐标系类型，唯一坐标系时本参数可省略，多个坐标系存在请填写正确坐标系索引。
+.局部变量 索引, 整数型
+
+索引 ＝ eCharts_JSON类.数组_取长度 (“series”)
+eCharts_JSON类.置新值 (“series[” ＋ 到文本 (索引) ＋ “].name”, , 系列名称)
+置新值 (“series[” ＋ 到文本 (索引) ＋ “].type”, , “effectScatter”)
+置新值 (“series[” ＋ 到文本 (索引) ＋ “].data”, 数据组)
+.如果 (是否为空 (文字标签_显示逻辑))
+    eCharts_JSON类.删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”)
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”)
+.否则
+    .判断开始 (文字标签_显示逻辑 ＝ 0)  ' 关闭文字标签
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”, , , , 假)
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”, , , , 假)
+    .判断 (文字标签_显示逻辑 ＝ 1)  ' 常开文字标签
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”, , , , 真)
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”, , , , 真)
+    .判断 (文字标签_显示逻辑 ＝ 2)  ' 鼠标经过时显示文字标签
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.show”, , , , 假)
+        置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.emphasis.show”, , , , 真)
+    .默认
+
+    .判断结束
+
+.如果结束
+' 文字标签_显示位置【label.position】
+.如果 (是否为空 (文字标签_显示位置))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.position”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.position”, , 文字标签_显示位置)
+.如果结束
+' 文字标签_角度【label.rotate】
+.如果 (是否为空 (文字标签_角度))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.rotate”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.rotate”, , , 文字标签_角度)
+.如果结束
+' 文字标签_文本格式器【label.formatter】
+.如果 (是否为空 (文字标签_文本格式器))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.formatter”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.formatter”, , 文字标签_文本格式器)
+.如果结束
+' 文字标签_颜色【label.color】
+.如果 (是否为空 (文字标签_颜色))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.color”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.color”, , 文字标签_颜色)
+.如果结束
+' 文字标签_大小【label.fontSize】
+.如果 (是否为空 (文字标签_大小))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.fontSize”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.fontSize”, , , 文字标签_大小)
+.如果结束
+' 文字标签_背景颜色【label.backgroundColor】
+.如果 (是否为空 (文字标签_背景颜色))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.backgroundColor”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].label.normal.backgroundColor”, , 文字标签_背景颜色)
+.如果结束
+' 散点_图形【symbol】
+.如果 (是否为空 (散点_图形))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].symbol”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbol”, , 散点_图形)
+.如果结束
+' 散点_颜色【itemStyle.color】
+.如果 (是否为空 (散点_颜色))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].itemStyle.color”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].itemStyle.color”, , 散点_颜色)
+.如果结束
+' 散点_阴影颜色【itemStyle.shadowColor】
+.如果 (是否为空 (散点_阴影颜色))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].itemStyle.shadowColor”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].itemStyle.shadowColor”, , 散点_阴影颜色)
+.如果结束
+' 散点_大小【symbolSize】
+.如果 (是否为空 (散点_大小))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolSize”, 散点_大小)
+.如果结束
+' 散点_角度【symbolRotate】
+.如果 (是否为空 (散点_角度))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].symbolRotate”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].symbolRotate”, , , 散点_角度)
+.如果结束
+' 绑定X轴索引
+.如果 (是否为空 (绑定x轴索引))
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].xAxisIndex”, , , 0)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].xAxisIndex”, , , 绑定x轴索引)
+.如果结束
+' 绑定Y轴索引
+.如果 (是否为空 (绑定y轴索引))
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].yAxisIndex”, , , 0)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].yAxisIndex”, , , 绑定y轴索引)
+.如果结束
+' 坐标系类型
+.如果 (是否为空 (坐标系类型))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].coordinateSystem”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].coordinateSystem”, , 坐标系类型)
+.如果结束
+' 绑定地理坐标系索引【geoIndex】
+.如果 (是否为空 (绑定地理坐标系索引))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].geoIndex”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].geoIndex”, , , 绑定地理坐标系索引)
+.如果结束
+' 绑定日历坐标系索引【calendarIndex】
+.如果 (是否为空 (绑定日历坐标系索引))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].calendarIndex”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].calendarIndex”, , , 绑定日历坐标系索引)
+.如果结束
+' 绑定极坐标系索引
+.如果 (是否为空 (绑定极坐标系索引))
+    删除 (“series[” ＋ 到文本 (索引) ＋ “].polarIndex”)
+.否则
+    置新值 (“series[” ＋ 到文本 (索引) ＋ “].polarIndex”, , , 绑定极坐标系索引)
+.如果结束
+返回 (索引)
+
+
 .子程序 添加标注_线, 整数型, 公开, 【markLine】，添加标注线，多条标注线请重复调用添加。返回当前标注线索引
 .参数 图形索引, 整数型, , 索引从0开始。
 .参数 起点标注类型, 整数型, 可空, 【data.type】，0：自定义（默认，且终点标注自动失效）；1：最小min；2：最大max；3：平均average
@@ -3469,3 +3808,13 @@ js代码 ＝ 子文本替换 (js代码, “%var_ma%”, 保存计算结果的js�
 
 返回 (eCharts_JSON类.数组_取长度 (“series”))
 
+
+.子程序 JS操作_注册地图, 文本型, 公开, 【echarts.registerMap】，返回js代码。
+.参数 地图名称, 文本型, , 【mapName】，名称用于在geo地理坐标系或地图数据中调用。
+.参数 地图geoJSON, 文本型, , 【geoJson】
+.局部变量 js代码, 文本型
+.局部变量 变量名, 文本型
+
+变量名 ＝ “_mapData” ＋ 到文本 (取随机数 (100, 999))
+js代码 ＝ “var ” ＋ 变量名 ＋ “=” ＋ 地图geoJSON ＋ “;echarts.registerMap('” ＋ 地图名称 ＋ “',” ＋ 变量名 ＋ “);”
+返回 (js代码)
