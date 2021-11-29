@@ -4,7 +4,7 @@
 ## 目录
 * [特别说明](#shuoming)
 * [模块简介](#jianjie)
-* [更新日志](https://gitee.com/lsy9202/E-echarts/blob/master/doc/manual3.md)
+* [更新日志](https://gitee.com/lsy9202/E-echarts/raw/master/doc/manual3.md)
 * [运行效果](#demo)
 * [模块特点](#tedian)
 * [最新版功能（v1.6）](#zuixin)
@@ -17,9 +17,9 @@
 
 由于示例更新频繁并且示例的基础文件包稍大，所以不再上传源码，示例大全源码及基础文件包将保存在群文件中，需要的可以加群下载（群号：93902676），有问题也欢迎及时群内留言反馈。
 
-​	![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_9.png)
+​	![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_9.png)
 
-​	![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_10.png)
+​	![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_10.png)
 
 ### 模块简介: {#jianjie}
 
@@ -29,28 +29,28 @@
 官方API文档：http://echarts.baidu.com/option.html  
 
 官方示例
-![官方示例](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/demo1.png)
+![官方示例](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/demo1.png)
 
 网友示例
-![网友示例](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/demo2.png)
+![网友示例](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/demo2.png)
 #####[回到顶部](#top)
 ***
 ### 模块运行效果： {#demo}
 
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/zhexianhesandiantu-tu.png)
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/zhutu-tu.png)
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/bingtu-tu1.png)
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/bingtu-tu2.png)
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/leidatu-tu.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/zhexianhesandiantu-tu.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/zhutu-tu.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/bingtu-tu1.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/bingtu-tu2.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/leidatu-tu.png)
 
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/demo3.png)
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/candlestick.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/demo3.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/candlestick.png)
 
 动态效果展示（gif动图稍慢）
 动态数据图形
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/demo5.gif)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/demo5.gif)
 K线图
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/demo4.gif)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/demo4.gif)
 
 #####[回到顶部](#top)
 ***
@@ -93,15 +93,15 @@ K线图
 1.图形对象类和框架类分离控制
 
 * 页面框架生成html页面时会自动调用图形对象代码
-  ​	![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_1.png)
+  ​	![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_1.png)
 
 * 一屏多图时创建多个图形主体即可，生成html页面时会自动调用
 
-  ![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_2.png)
+  ![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_2.png)
 
 2.从图形创建到图形绘制无需担心json的内容
 
-​	![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_3.png)
+​	![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_3.png)
 
 3.封装了数据异步调用的方法
 
@@ -111,7 +111,7 @@ K线图
 	> （普通的json类不允许使用js变量名或js代码，如果有嵌入js内容之后是无法再使用命令修改json内容，本模块突破了此壁障）
 	> json中使用过js变量名或者嵌入过js代码后，最后运行图形配置需要使用“运行图形配置_带JS变量()”命令
 
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_4.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_4.png)
 
 4.新版1.6模块简化了异步更新图形数据的方法
 
@@ -123,11 +123,11 @@ K线图
 
    > 本命令将取出当前图形对象中的所有图形数据（仅仅是图形数据，其他将忽略）
 
-   ![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_5.png)
+   ![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_5.png)
 
 * 取到的数据：
 
-  ![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_6.png)
+  ![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_6.png)
 
 * 修改数据
 
@@ -137,19 +137,19 @@ K线图
 
   这样可以得到图形从右往左移动的效果（最右边是新数据）
 
-  ![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_7.png)
+  ![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_7.png)
 
 * 写入数据更新到图形
 
-  ![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_8.png)
+  ![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_8.png)
 
 5.新版模块所有命令都添加了英文名词注释，以便对照查阅官网api文档
 
 官网api文档地址：http://echarts.baidu.com/option.html
 
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_11.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_11.png)
 
-![](https://gitee.com/lsy9202/E-echarts/blob/master/doc/img/1_6_12.png)
+![](https://gitee.com/lsy9202/E-echarts/raw/master/doc/img/1_6_12.png)
 
 #####[回到顶部](#top)
 
